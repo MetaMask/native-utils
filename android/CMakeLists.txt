@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 20)
 # Configure secp256k1 build options
 set(SECP256K1_ENABLE_MODULE_RECOVERY ON CACHE BOOL "Enable secp256k1 recovery module")
 set(SECP256K1_ENABLE_MODULE_ECDH ON CACHE BOOL "Enable secp256k1 ECDH module")
-set(SECP256K1_ENABLE_MODULE_SCHNORRSIG ON CACHE BOOL "Enable secp256k1 Schnorr signature module")
+set(SECP256K1_ENABLE_MODULE_SCHNORRSIG OFF CACHE BOOL "Enable secp256k1 Schnorr signature module")
 set(SECP256K1_BUILD_TESTS OFF CACHE BOOL "Build secp256k1 tests")
 set(SECP256K1_BUILD_BENCHMARK OFF CACHE BOOL "Build secp256k1 benchmark")
 set(SECP256K1_BUILD_EXAMPLES OFF CACHE BOOL "Build secp256k1 examples")
