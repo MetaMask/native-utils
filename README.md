@@ -1,6 +1,24 @@
 # MetaMask Native Utils
 
-This is a collection of native utils for MetaMask.
+This is a collection of native utils (mostly crypto functions) for MetaMask mobile app implemented using Nitro modules and C++.
+
+## Features
+
+- Super fast crypto functions (e.g. `keccak256`, `secp256k1`, `hmacSha512`)
+- It uses [official Bitcoin Core library](https://github.com/bitcoin-core/secp256k1) for secp256k1
+- More than 300 tests to ensure correctness and compatibility with JS implementations (test cases are directly ported from `@noble/secp256k1`, `@noble/hashes`, `@ethereumjs/util`)
+- Benchmarks are included to show the performance improvements
+
+## Performance comparison 🚀
+
+Device: Pixel 4a 5G (Android 14)
+
+- `getPublicKey` - ~133x faster than `@noble/secp256k1` (1068ms => 8ms)
+- `hmacSha512` - ~144x faster than `@noble/hashes`
+- `pubToAddress` - ~110x faster than `@ethereumjs/util`
+- `keccak256` - ~140x faster than `@noble/hashes`
+
+Take benchmarks with a grain of salt, as they are not always representative of real-world performance, but even my measurements in real mobile app showed massive performance improvements.
 
 ## Installation
 
@@ -8,7 +26,56 @@ This is a collection of native utils for MetaMask.
 
 ## Usage
 
-_Add examples here_
+```typescript
+import {
+  keccak256,
+  getPublicKey,
+  hmacSha512,
+  pubToAddress,
+  multiply
+} from '@metamask/native-utils';
+
+// Basic arithmetic (demo function)
+const result = multiply(3, 7); // 21
+
+// Keccak-256 hashing - replaces @noble/hashes/sha3.keccak_256
+// Accepts multiple input types for maximum flexibility
+const hash1 = keccak256('deadbeef'); // from hex string
+const hash2 = keccak256(new Uint8Array([0xde, 0xad, 0xbe, 0xef])); // from Uint8Array
+const hash3 = keccak256([222, 173, 190, 239]); // from number array
+
+// Generate secp256k1 public keys - replaces @noble/secp256k1.getPublicKey
+const privateKey = '0000000000000000000000000000000000000000000000000000000000000001';
+const compressedPubKey = getPublicKey(privateKey, true); // 33 bytes compressed
+const uncompressedPubKey = getPublicKey(privateKey, false); // 65 bytes uncompressed
+
+// Also supports Uint8Array and bigint private keys (same API as @noble/secp256k1)
+const privateKeyBytes = new Uint8Array(32).fill(1, 31); // private key as bytes
+const privateKeyBigInt = 1n; // private key as bigint
+const pubKeyFromBytes = getPublicKey(privateKeyBytes);
+const pubKeyFromBigInt = getPublicKey(privateKeyBigInt);
+
+// HMAC-SHA512 authentication - replaces @noble/hashes/hmac + @noble/hashes/sha2
+const key = new Uint8Array(32).fill(0x01);
+const data = new Uint8Array([0x48, 0x65, 0x6c, 0x6c, 0x6f]); // "Hello"
+const hmacResult = hmacSha512(key, data); // 64-byte result
+
+// Convert public key to Ethereum address - replaces @ethereumjs/util.publicToAddress
+const publicKey = new Uint8Array([
+  // 64-byte public key (without 0x04 prefix)
+  0x3a, 0x44, 0x3d, 0x83, 0x81, 0xa6, 0x79, 0x8a, 0x70, 0xc6, 0xff, 0x93,
+  // ... rest of the bytes
+]);
+const address = pubToAddress(publicKey); // 20-byte Ethereum address
+
+// For SEC1-encoded public keys (with 0x04 prefix), use sanitize option
+const sec1PublicKey = new Uint8Array([
+  0x04, // SEC1 prefix
+  0x3a, 0x44, 0x3d, 0x83, 0x81, 0xa6, 0x79, 0x8a, 0x70, 0xc6, 0xff, 0x93,
+  // ... rest of the bytes
+]);
+const addressFromSec1 = pubToAddress(sec1PublicKey, true); // sanitize = true
+```
 
 ## Contributing
 
@@ -19,6 +86,18 @@ _Add examples here_
 - Install [Yarn](https://yarnpkg.com) v4 via [Corepack](https://github.com/nodejs/corepack?tab=readme-ov-file#how-to-install)
 - Run `yarn install` to install dependencies and run any required post-install scripts
 - Run `git submodule update --init --recursive` to initialize the submodules
+
+### Running the example app
+
+- Go into the `example` directory
+- Run `yarn ios` to run the example app on iOS
+- Run `yarn android` to run the example app on Android
+
+### Running benchmarks
+
+To run the benchmarks, it's recommended to run the example in release mode.
+- Run `yarn android:release` to run the example app on Android
+- Run `yarn ios:release` to run the example app on iOS
 
 ### Testing and Linting
 
