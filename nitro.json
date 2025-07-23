@@ -1,0 +1,16 @@
+{
+  "cxxNamespace": ["nitrosecp256k1"],
+  "ios": {
+    "iosModuleName": "NitroSecp256k1"
+  },
+  "android": {
+    "androidNamespace": ["nitrosecp256k1"],
+    "androidCxxLibName": "nitrosecp256k1"
+  },
+  "autolinking": {
+    "NitroSecp256k1": {
+      "cpp": "HybridNitroSecp256k1"
+    }
+  },
+  "ignorePaths": ["node_modules"]
+}

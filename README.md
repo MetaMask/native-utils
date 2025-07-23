@@ -1,47 +1,14 @@
-# MetaMask Module Template
+# MetaMask Native Utils
 
-This TypeScript module is maintained in the style of the MetaMask team.
-
-## Template Instructions
-
-Follow these instructions when using this template.
-
-- Update the package name, referenced in the following places:
-  - The `name` field of `package.json`
-  - The README title
-  - The README "Usage" section
-- Update the package description
-  - The package description is referenced at the beginning of the README, and in the `description` field of `package.json`.
-- Update the repository URL, referenced in the following places:
-  - `repository` field of `package.json`
-  - The links in the API section of the README
-- If your project has side effects, update the `sideEffects` field of
-  `package.json` to `true`, or an array of file globs that match the files that
-  have side effects.
-- Update the pull request template (`.github/pull_request_template.md`) to remove the `Examples` section that is specific to this template.
-- Update the README "Usage" section, or remove it if it's not needed.
-- Update the CODEOWNERS file to set the appropriate code owners for the repository (typically one or more engineering teams)
-  - Ensure each referenced team has write permission, and that the engineering team still has write permission.
-- Delete these instructions.
+This is a collection of native utils for MetaMask.
 
 ## Installation
 
-`yarn add @metamask/metamask-module-template`
-
-or
-
-`npm install @metamask/metamask-module-template`
+`yarn add @metamask/native-utils`
 
 ## Usage
 
 _Add examples here_
-
-## API
-
-See our documentation:
-
-- [Latest published API documentation](https://metamask.github.io/metamask-module-template/latest/)
-- [Latest development API documentation](https://metamask.github.io/metamask-module-template/staging/)
 
 ## Contributing
 
@@ -51,12 +18,11 @@ See our documentation:
   - If you are using [nvm](https://github.com/creationix/nvm#installation) (recommended) running `nvm install` will install the latest version and running `nvm use` will automatically choose the right node version for you.
 - Install [Yarn](https://yarnpkg.com) v4 via [Corepack](https://github.com/nodejs/corepack?tab=readme-ov-file#how-to-install)
 - Run `yarn install` to install dependencies and run any required post-install scripts
+- Run `git submodule update --init --recursive` to initialize the submodules
 
 ### Testing and Linting
 
-Run `yarn test` to run the tests once. To run tests on file changes, run `yarn test:watch`.
-
-Run `yarn lint` to run the linter, or run `yarn lint:fix` to run the linter and fix any automatically fixable issues.
+All testing should be done using Example app.
 
 ### Release & Publishing
 
