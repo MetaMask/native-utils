@@ -14,7 +14,7 @@ export interface VerificationResult {
 // Helper functions are now imported from testUtils
 
 export const verifyPublicKeyImplementation = (
-  privateKeyStr: string
+  privateKeyStr: string,
 ): VerificationResult => {
   // Pad private key to 32 bytes (64 hex chars)
   const privateKey = privateKeyStr.padStart(64, '0');

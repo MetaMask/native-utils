@@ -1,6 +1,6 @@
 import { keccak256 } from '@metamask/native-utils';
 import { keccak_256 } from '@noble/hashes/sha3';
-import { hexToUint8Array, calculateStats, utf8ToBytes, repeat } from '../testUtils';
+import { hexToUint8Array, calculateStats, utf8ToBytes } from '../testUtils';
 
 export type BenchmarkResult = {
   testName: string;
@@ -32,7 +32,7 @@ async function benchmarkFunction(
   testName: string,
   nativeImpl: () => Uint8Array,
   jsImpl: () => Uint8Array,
-  iterations: number = 1000
+  iterations: number = 1000,
 ): Promise<BenchmarkResult> {
   const nativeTimes: number[] = [];
   const jsTimes: number[] = [];
@@ -92,48 +92,48 @@ export async function benchmarkSmallString(): Promise<BenchmarkResult> {
     'Small String ("abc")',
     () => keccak256(testInputBytes),
     () => keccak_256(testInputBytes),
-    2000
+    2000,
   );
 }
 
-
-
 // Benchmark 32-byte private key
 export async function benchmarkPrivateKey(): Promise<BenchmarkResult> {
-  const privateKeyHex = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+  const privateKeyHex =
+    '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
   return benchmarkFunction(
     '32-byte Private Key (hex string)',
     () => keccak256(privateKeyHex),
     () => keccak_256(hexToUint8Array('0x' + privateKeyHex)),
-    1500
+    1500,
   );
 }
 
 // Benchmark 64-byte public key
 export async function benchmarkPublicKey(): Promise<BenchmarkResult> {
   const publicKeyBytes = hexToUint8Array(
-    '0x3a443d8381a6798a70c6ff9304bdc8cb0163c23211d11628fae52ef9e0dca11a001cf066d56a8156fc201cd5df8a36ef694eecd258903fca7086c1fae7441e1d'
+    '0x3a443d8381a6798a70c6ff9304bdc8cb0163c23211d11628fae52ef9e0dca11a001cf066d56a8156fc201cd5df8a36ef694eecd258903fca7086c1fae7441e1d',
   );
 
   return benchmarkFunction(
     '64-byte Public Key (Uint8Array)',
     () => keccak256(publicKeyBytes),
     () => keccak_256(publicKeyBytes),
-    1500
+    1500,
   );
 }
 
 // Benchmark medium-size input (BIP32 seed)
 export async function benchmarkBIP32Seed(): Promise<BenchmarkResult> {
-  const seedPhrase = 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
+  const seedPhrase =
+    'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
   const seedBytes = utf8ToBytes(seedPhrase);
 
   return benchmarkFunction(
     'BIP32 Seed Phrase (96 bytes)',
     () => keccak256(seedBytes),
     () => keccak_256(seedBytes),
-    1000
+    1000,
   );
 }
 
@@ -146,11 +146,9 @@ export async function benchmarkTransactionData(): Promise<BenchmarkResult> {
     'Transaction Data (256 bytes)',
     () => keccak256(txData),
     () => keccak_256(txData),
-    1000
+    1000,
   );
 }
-
-
 
 // Benchmark realistic ETH address checksumming (EIP-55)
 export async function benchmarkETHAddressChecksum(): Promise<BenchmarkResult> {
@@ -177,12 +175,12 @@ export async function benchmarkETHAddressChecksum(): Promise<BenchmarkResult> {
   const checksumAddressNative = (address: string): string => {
     const cleanAddr = address.toLowerCase().replace('0x', '');
     const hash = keccak256(utf8ToBytes(cleanAddr));
-    
+
     let checksumAddress = '0x';
     for (let i = 0; i < cleanAddr.length; i++) {
       const char = cleanAddr[i];
       if (!char) continue;
-      
+
       if (char >= '0' && char <= '9') {
         checksumAddress += char;
       } else {
@@ -190,8 +188,8 @@ export async function benchmarkETHAddressChecksum(): Promise<BenchmarkResult> {
         const hashByteIndex = Math.floor(i / 2);
         const hashByte = hash[hashByteIndex];
         if (hashByte === undefined) continue;
-        
-        const nibble = i % 2 === 0 ? (hashByte >> 4) & 0xF : hashByte & 0xF;
+
+        const nibble = i % 2 === 0 ? (hashByte >> 4) & 0xf : hashByte & 0xf;
         checksumAddress += nibble >= 8 ? char.toUpperCase() : char;
       }
     }
@@ -202,12 +200,12 @@ export async function benchmarkETHAddressChecksum(): Promise<BenchmarkResult> {
   const checksumAddressNoble = (address: string): string => {
     const cleanAddr = address.toLowerCase().replace('0x', '');
     const hash = keccak_256(utf8ToBytes(cleanAddr));
-    
+
     let checksumAddress = '0x';
     for (let i = 0; i < cleanAddr.length; i++) {
       const char = cleanAddr[i];
       if (!char) continue;
-      
+
       if (char >= '0' && char <= '9') {
         checksumAddress += char;
       } else {
@@ -215,8 +213,8 @@ export async function benchmarkETHAddressChecksum(): Promise<BenchmarkResult> {
         const hashByteIndex = Math.floor(i / 2);
         const hashByte = hash[hashByteIndex];
         if (hashByte === undefined) continue;
-        
-        const nibble = i % 2 === 0 ? (hashByte >> 4) & 0xF : hashByte & 0xF;
+
+        const nibble = i % 2 === 0 ? (hashByte >> 4) & 0xf : hashByte & 0xf;
         checksumAddress += nibble >= 8 ? char.toUpperCase() : char;
       }
     }
@@ -228,7 +226,7 @@ export async function benchmarkETHAddressChecksum(): Promise<BenchmarkResult> {
     () => {
       // Process all addresses with native implementation and return last result
       let result = '';
-      addresses.forEach(addr => {
+      addresses.forEach((addr) => {
         result = checksumAddressNative(addr);
       });
       return utf8ToBytes(result);
@@ -236,12 +234,12 @@ export async function benchmarkETHAddressChecksum(): Promise<BenchmarkResult> {
     () => {
       // Process all addresses with Noble implementation and return last result
       let result = '';
-      addresses.forEach(addr => {
+      addresses.forEach((addr) => {
         result = checksumAddressNoble(addr);
       });
       return utf8ToBytes(result);
     },
-    200 // Lower iterations since we're doing more work per iteration
+    200, // Lower iterations since we're doing more work per iteration
   );
 }
 
@@ -299,38 +297,10 @@ export async function benchmarkHexVsBytes(): Promise<BenchmarkResult> {
   };
 }
 
-// Format benchmark results for display
-export function formatKeccak256BenchmarkResults(results: BenchmarkResult[]): string {
-  let output = '\n🔍 Keccak256 Benchmark Results\n';
-  output += '=' .repeat(50) + '\n\n';
-
-  let totalNativeTime = 0;
-  let totalJsTime = 0;
-  let nativeWins = 0;
-
-  for (const result of results) {
-    totalNativeTime += result.native.totalTime;
-    totalJsTime += result.javascript.totalTime;
-    if (result.comparison.nativeIsFaster) nativeWins++;
-
-    output += `📊 ${result.testName}\n`;
-    output += `   🚀 Native: ${result.native.averageTime.toFixed(3)}ms avg | ${result.native.iops.toFixed(0)} ops/sec\n`;
-    output += `   📜 Noble: ${result.javascript.averageTime.toFixed(3)}ms avg | ${result.javascript.iops.toFixed(0)} ops/sec\n`;
-    output += `   ⚡ Result: ${result.comparison.speedupFactor.toFixed(2)}x ${result.comparison.nativeIsFaster ? 'faster' : 'slower'} (${result.comparison.performanceGain.toFixed(1)}% gain)\n`;
-    output += `   📈 Range: ${result.native.minTime.toFixed(3)}-${result.native.maxTime.toFixed(3)}ms (Native) | ${result.javascript.minTime.toFixed(3)}-${result.javascript.maxTime.toFixed(3)}ms (Noble)\n\n`;
-  }
-
-  output += `📊 Summary: ${nativeWins}/${results.length} tests won by native\n`;
-  output += `⚡ Average speedup: ${(totalJsTime / totalNativeTime).toFixed(2)}x\n`;
-  output += `🏆 Overall performance: ${((totalJsTime - totalNativeTime) / totalJsTime * 100).toFixed(1)}% improvement\n`;
-
-  return output;
-}
-
 // Run all keccak256 benchmarks
 export async function runAllKeccak256Benchmarks(): Promise<BenchmarkResult[]> {
   console.log('🚀 Starting Keccak256 benchmarks...');
-  
+
   const benchmarks = [
     { name: 'Small String', fn: benchmarkSmallString },
     { name: 'Private Key', fn: benchmarkPrivateKey },
@@ -342,19 +312,20 @@ export async function runAllKeccak256Benchmarks(): Promise<BenchmarkResult[]> {
   ];
 
   const results: BenchmarkResult[] = [];
-  
+
   for (let i = 0; i < benchmarks.length; i++) {
     const benchmark = benchmarks[i]!;
-    console.log(`📊 Running ${benchmark.name} benchmark... (${i + 1}/${benchmarks.length})`);
+    console.log(
+      `📊 Running ${benchmark.name} benchmark... (${i + 1}/${benchmarks.length})`,
+    );
     const result = await benchmark.fn();
     results.push(result);
-    
+
     // Small delay between benchmarks
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
 
   console.log('✅ All Keccak256 benchmarks completed!');
-  console.log(formatKeccak256BenchmarkResults(results));
-  
+
   return results;
-} 
+}

@@ -31,7 +31,7 @@ export interface BenchmarkResult {
  * Benchmark HMAC-SHA512 performance for BIP32 operations
  */
 export async function benchmarkHmacSha512BIP32(
-  iterations: number = 1000
+  iterations: number = 1000,
 ): Promise<BenchmarkResult> {
   // Prepare test data similar to BIP32 operations
   const chainCode = new Uint8Array(32);
@@ -121,7 +121,7 @@ export async function benchmarkHmacSha512BIP32(
  * Benchmark different BIP32 scenarios
  */
 export async function benchmarkBIP32Scenarios(
-  iterations: number = 500
+  iterations: number = 500,
 ): Promise<BenchmarkResult[]> {
   const results: BenchmarkResult[] = [];
 
@@ -141,7 +141,7 @@ export async function benchmarkBIP32Scenarios(
     'Normal Derivation',
     chainCode,
     normalData,
-    iterations
+    iterations,
   );
   results.push(normalResult);
 
@@ -159,7 +159,7 @@ export async function benchmarkBIP32Scenarios(
     'Hardened Derivation',
     chainCode,
     hardenedData,
-    iterations
+    iterations,
   );
   results.push(hardenedResult);
 
@@ -174,7 +174,7 @@ export async function benchmarkBIP32Scenarios(
     'Master Seed Generation',
     bitcoinSeed,
     masterSeed,
-    iterations
+    iterations,
   );
   results.push(masterResult);
 
@@ -188,7 +188,7 @@ async function benchmarkScenario(
   testName: string,
   key: Uint8Array,
   data: Uint8Array,
-  iterations: number
+  iterations: number,
 ): Promise<BenchmarkResult> {
   // Benchmark native implementation
   const nativeTimes: number[] = [];
@@ -257,34 +257,4 @@ async function benchmarkScenario(
       percentageImprovement,
     },
   };
-}
-
-/**
- * Format benchmark results for display
- */
-export function formatBenchmarkResults(results: BenchmarkResult[]): string {
-  let output = 'HMAC-SHA512 BIP32 Benchmark Results:\n\n';
-
-  for (const result of results) {
-    output += `${result.testName}:\n`;
-    output += `  Native: ${result.native.averageTime.toFixed(2)}ms avg (${result.native.iops.toFixed(0)} IOPS)\n`;
-    output += `  JavaScript: ${result.javascript.averageTime.toFixed(2)}ms avg (${result.javascript.iops.toFixed(0)} IOPS)\n`;
-    output += `  Speedup: ${result.comparison.speedupFactor.toFixed(2)}x ${result.comparison.nativeIsFaster ? 'faster' : 'slower'}\n`;
-    output += `  Improvement: ${result.comparison.percentageImprovement.toFixed(1)}%\n\n`;
-  }
-
-  return output;
-}
-
-/**
- * Quick benchmark for UI display
- */
-export async function quickHmacBenchmark(): Promise<string> {
-  const result = await benchmarkHmacSha512BIP32(100);
-
-  return `HMAC-SHA512 Quick Benchmark (100 iterations):
-Native: ${result.native.averageTime.toFixed(2)}ms avg (${result.native.iops.toFixed(0)} IOPS)
-JavaScript: ${result.javascript.averageTime.toFixed(2)}ms avg (${result.javascript.iops.toFixed(0)} IOPS)
-Speedup: ${result.comparison.speedupFactor.toFixed(2)}x ${result.comparison.nativeIsFaster ? 'faster' : 'slower'}
-Improvement: ${result.comparison.percentageImprovement.toFixed(1)}%`;
 }

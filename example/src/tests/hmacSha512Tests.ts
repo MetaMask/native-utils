@@ -32,7 +32,7 @@ export function testHmacSha512Basic(): TestResult[] {
         name: 'Basic HMAC-SHA512 (simple key/data)',
         success: false,
         message: `Results don't match. Native: ${Array.from(
-          nativeResult1.slice(0, 8)
+          nativeResult1.slice(0, 8),
         )
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('')}..., Noble: ${Array.from(nobleResult1.slice(0, 8))
@@ -62,7 +62,7 @@ export function testHmacSha512Basic(): TestResult[] {
         name: 'HMAC-SHA512 with empty key/data',
         success: false,
         message: `Results don't match. Native: ${Array.from(
-          nativeResult2.slice(0, 8)
+          nativeResult2.slice(0, 8),
         )
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('')}..., Noble: ${Array.from(nobleResult2.slice(0, 8))
@@ -96,7 +96,7 @@ export function testHmacSha512Basic(): TestResult[] {
         name: 'HMAC-SHA512 with short key',
         success: false,
         message: `Results don't match. Native: ${Array.from(
-          nativeResult3.slice(0, 8)
+          nativeResult3.slice(0, 8),
         )
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('')}..., Noble: ${Array.from(nobleResult3.slice(0, 8))
@@ -122,7 +122,7 @@ export function testHmacSha512Basic(): TestResult[] {
         name: 'HMAC-SHA512 with long key',
         success: false,
         message: `Results don't match. Native: ${Array.from(
-          nativeResult4.slice(0, 8)
+          nativeResult4.slice(0, 8),
         )
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('')}..., Noble: ${Array.from(nobleResult4.slice(0, 8))
@@ -168,7 +168,7 @@ export function testHmacSha512RFC4231(): TestResult[] {
         name: 'RFC 4231 Test Case 1',
         success: true,
         message: `Native and Noble results match. First 8 bytes: ${Array.from(
-          nativeResult1.slice(0, 8)
+          nativeResult1.slice(0, 8),
         )
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('')}`,
@@ -178,7 +178,7 @@ export function testHmacSha512RFC4231(): TestResult[] {
         name: 'RFC 4231 Test Case 1',
         success: false,
         message: `Results don't match. Native: ${Array.from(
-          nativeResult1.slice(0, 8)
+          nativeResult1.slice(0, 8),
         )
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('')}..., Noble: ${Array.from(nobleResult1.slice(0, 8))
@@ -206,7 +206,7 @@ export function testHmacSha512RFC4231(): TestResult[] {
         name: 'RFC 4231 Test Case 2',
         success: true,
         message: `Native and Noble results match. First 8 bytes: ${Array.from(
-          nativeResult2.slice(0, 8)
+          nativeResult2.slice(0, 8),
         )
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('')}`,
@@ -216,7 +216,7 @@ export function testHmacSha512RFC4231(): TestResult[] {
         name: 'RFC 4231 Test Case 2',
         success: false,
         message: `Results don't match. Native: ${Array.from(
-          nativeResult2.slice(0, 8)
+          nativeResult2.slice(0, 8),
         )
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('')}..., Noble: ${Array.from(nobleResult2.slice(0, 8))
@@ -242,7 +242,7 @@ export function testHmacSha512RFC4231(): TestResult[] {
         name: 'RFC 4231 Test Case 3',
         success: true,
         message: `Native and Noble results match. First 8 bytes: ${Array.from(
-          nativeResult3.slice(0, 8)
+          nativeResult3.slice(0, 8),
         )
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('')}`,
@@ -252,7 +252,7 @@ export function testHmacSha512RFC4231(): TestResult[] {
         name: 'RFC 4231 Test Case 3',
         success: false,
         message: `Results don't match. Native: ${Array.from(
-          nativeResult3.slice(0, 8)
+          nativeResult3.slice(0, 8),
         )
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('')}..., Noble: ${Array.from(nobleResult3.slice(0, 8))
@@ -310,7 +310,7 @@ export function testHmacSha512BIP32(): TestResult[] {
         name: 'BIP32 normal derivation',
         success: false,
         message: `Results don't match. Native: ${Array.from(
-          nativeResult1.slice(0, 8)
+          nativeResult1.slice(0, 8),
         )
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('')}..., Noble: ${Array.from(nobleResult1.slice(0, 8))
@@ -348,7 +348,7 @@ export function testHmacSha512BIP32(): TestResult[] {
         name: 'BIP32 hardened derivation',
         success: false,
         message: `Results don't match. Native: ${Array.from(
-          nativeResult2.slice(0, 8)
+          nativeResult2.slice(0, 8),
         )
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('')}..., Noble: ${Array.from(nobleResult2.slice(0, 8))
@@ -382,7 +382,7 @@ export function testHmacSha512BIP32(): TestResult[] {
         name: 'BIP32 master seed generation',
         success: false,
         message: `Results don't match. Native: ${Array.from(
-          nativeResult3.slice(0, 8)
+          nativeResult3.slice(0, 8),
         )
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('')}..., Noble: ${Array.from(nobleResult3.slice(0, 8))
@@ -430,7 +430,7 @@ export function testHmacSha512EdgeCases(): TestResult[] {
         name: 'Large key (>128 bytes)',
         success: false,
         message: `Results don't match. Native: ${Array.from(
-          nativeResult1.slice(0, 8)
+          nativeResult1.slice(0, 8),
         )
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('')}..., Noble: ${Array.from(nobleResult1.slice(0, 8))
@@ -461,7 +461,7 @@ export function testHmacSha512EdgeCases(): TestResult[] {
         name: 'Large data (10KB)',
         success: false,
         message: `Results don't match. Native: ${Array.from(
-          nativeResult2.slice(0, 8)
+          nativeResult2.slice(0, 8),
         )
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('')}..., Noble: ${Array.from(nobleResult2.slice(0, 8))
@@ -491,7 +491,7 @@ export function testHmacSha512EdgeCases(): TestResult[] {
         name: 'Single byte key and data',
         success: false,
         message: `Results don't match. Native: ${Array.from(
-          nativeResult3.slice(0, 8)
+          nativeResult3.slice(0, 8),
         )
           .map((b) => b.toString(16).padStart(2, '0'))
           .join('')}..., Noble: ${Array.from(nobleResult3.slice(0, 8))

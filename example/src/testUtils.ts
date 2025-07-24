@@ -11,7 +11,8 @@ export interface TestResult {
  */
 export function hexToUint8Array(hex: string): Uint8Array {
   // Remove 0x prefix if present
-  const cleanHex = hex.startsWith('0x') || hex.startsWith('0X') ? hex.slice(2) : hex;
+  const cleanHex =
+    hex.startsWith('0x') || hex.startsWith('0X') ? hex.slice(2) : hex;
 
   // Ensure even length
   if (cleanHex.length % 2 !== 0) {
@@ -31,11 +32,14 @@ export function hexToUint8Array(hex: string): Uint8Array {
  * @param bytes - The bytes to convert
  * @param withPrefix - Whether to include '0x' prefix (default: true)
  */
-export function uint8ArrayToHex(bytes: Uint8Array, withPrefix: boolean = true): string {
+export function uint8ArrayToHex(
+  bytes: Uint8Array,
+  withPrefix: boolean = true,
+): string {
   const hex = Array.from(bytes)
     .map((b) => b.toString(16).padStart(2, '0'))
     .join('');
-  
+
   return withPrefix ? '0x' + hex : hex;
 }
 

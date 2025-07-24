@@ -7,7 +7,7 @@ import { hexToUint8Array, uint8ArrayToHex } from '../testUtils';
 function testBasicPublicKey(): TestResult {
   try {
     const pubKey = hexToUint8Array(
-      '0x3a443d8381a6798a70c6ff9304bdc8cb0163c23211d11628fae52ef9e0dca11a001cf066d56a8156fc201cd5df8a36ef694eecd258903fca7086c1fae7441e1d'
+      '0x3a443d8381a6798a70c6ff9304bdc8cb0163c23211d11628fae52ef9e0dca11a001cf066d56a8156fc201cd5df8a36ef694eecd258903fca7086c1fae7441e1d',
     );
     const expectedAddress = '0x2f015c60e0be116b1f0cd534704db9c92118fb6a';
 
@@ -40,7 +40,7 @@ function testBasicPublicKey(): TestResult {
 function testSEC1PublicKeyWithSanitize(): TestResult {
   try {
     const pubKey = hexToUint8Array(
-      '0x043a443d8381a6798a70c6ff9304bdc8cb0163c23211d11628fae52ef9e0dca11a001cf066d56a8156fc201cd5df8a36ef694eecd258903fca7086c1fae7441e1d'
+      '0x043a443d8381a6798a70c6ff9304bdc8cb0163c23211d11628fae52ef9e0dca11a001cf066d56a8156fc201cd5df8a36ef694eecd258903fca7086c1fae7441e1d',
     );
     const expectedAddress = '0x2f015c60e0be116b1f0cd534704db9c92118fb6a';
 
@@ -73,7 +73,7 @@ function testSEC1PublicKeyWithSanitize(): TestResult {
 function testCompressedPublicKey(): TestResult {
   try {
     const pubKey = hexToUint8Array(
-      '0x023a443d8381a6798a70c6ff9304bdc8cb0163c23211d11628fae52ef9e0dca11a001cf066d56a8156fc201cd5df8a36ef694eecd258903fca7086c1fae7441e1d'
+      '0x023a443d8381a6798a70c6ff9304bdc8cb0163c23211d11628fae52ef9e0dca11a001cf066d56a8156fc201cd5df8a36ef694eecd258903fca7086c1fae7441e1d',
     );
 
     try {
@@ -103,7 +103,7 @@ function testCompressedPublicKey(): TestResult {
 function testInvalidPublicKeyLength(): TestResult {
   try {
     const pubKey = hexToUint8Array(
-      '0x3a443d8381a6798a70c6ff9304bdc8cb0163c23211d11628fae52ef9e0dca11a001cf066d56a8156fc201cd5df8a36ef694eecd258903fca7086c1fae744'
+      '0x3a443d8381a6798a70c6ff9304bdc8cb0163c23211d11628fae52ef9e0dca11a001cf066d56a8156fc201cd5df8a36ef694eecd258903fca7086c1fae744',
     );
 
     try {
@@ -133,7 +133,7 @@ function testInvalidPublicKeyLength(): TestResult {
 function testSEC1PublicKeyWithoutSanitize(): TestResult {
   try {
     const pubKey = hexToUint8Array(
-      '0x043a443d8381a6798a70c6ff9304bdc8cb0163c23211d11628fae52ef9e0dca11a001cf066d56a8156fc201cd5df8a36ef694eecd258903fca7086c1fae7441e1d'
+      '0x043a443d8381a6798a70c6ff9304bdc8cb0163c23211d11628fae52ef9e0dca11a001cf066d56a8156fc201cd5df8a36ef694eecd258903fca7086c1fae7441e1d',
     );
 
     try {
@@ -560,7 +560,7 @@ function testComparisonWithEthereumJS(): TestResult[] {
       const nativeResult = pubToAddress(pubKey, vector.sanitize);
       const ethereumjsResult = ethereumjsPublicToAddress(
         pubKey,
-        vector.sanitize
+        vector.sanitize,
       );
 
       const nativeAddress = uint8ArrayToHex(nativeResult);

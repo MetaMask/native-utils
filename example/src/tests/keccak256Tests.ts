@@ -17,14 +17,14 @@ const NIST_VECTORS = [
   },
   {
     input: utf8ToBytes(
-      'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq'
+      'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq',
     ),
     expected:
       '45d3b367a6904e6e8d502ee04999a7c27647f91fa845d456525fd352ae3d7371',
   },
   {
     input: utf8ToBytes(
-      'abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu'
+      'abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu',
     ),
     expected:
       'f519747ed599024f3882238e5ab43960132572b7345fbeb9a90769dafd21ad67',
@@ -581,7 +581,8 @@ export function testNobleInputFormatConsistency(): TestResult[] {
     const nativeResult1 = keccak256(testBytes);
     const nobleResult1 = keccak_256(testBytes);
     const hex1Match =
-      uint8ArrayToHex(nativeResult1, false) === uint8ArrayToHex(nobleResult1, false);
+      uint8ArrayToHex(nativeResult1, false) ===
+      uint8ArrayToHex(nobleResult1, false);
 
     results.push({
       name: 'Uint8Array consistency with Noble',
@@ -596,7 +597,8 @@ export function testNobleInputFormatConsistency(): TestResult[] {
     const nativeResult2 = keccak256(hexString); // Native supports hex string
     const nobleResult2 = keccak_256(testBytes); // Noble uses Uint8Array
     const hex2Match =
-      uint8ArrayToHex(nativeResult2, false) === uint8ArrayToHex(nobleResult2, false);
+      uint8ArrayToHex(nativeResult2, false) ===
+      uint8ArrayToHex(nobleResult2, false);
 
     results.push({
       name: 'Hex string (native) vs Uint8Array (noble)',
@@ -612,7 +614,8 @@ export function testNobleInputFormatConsistency(): TestResult[] {
     const nativeResult3 = keccak256(buffer);
     const nobleResult3 = keccak_256(testBytes);
     const hex3Match =
-      uint8ArrayToHex(nativeResult3, false) === uint8ArrayToHex(nobleResult3, false);
+      uint8ArrayToHex(nativeResult3, false) ===
+      uint8ArrayToHex(nobleResult3, false);
 
     results.push({
       name: 'ArrayBuffer (native) vs Uint8Array (noble)',
@@ -627,7 +630,8 @@ export function testNobleInputFormatConsistency(): TestResult[] {
     const nativeResult4 = keccak256(numberArray);
     const nobleResult4 = keccak_256(testBytes);
     const hex4Match =
-      uint8ArrayToHex(nativeResult4, false) === uint8ArrayToHex(nobleResult4, false);
+      uint8ArrayToHex(nativeResult4, false) ===
+      uint8ArrayToHex(nobleResult4, false);
 
     results.push({
       name: 'Number array (native) vs Uint8Array (noble)',

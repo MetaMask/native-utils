@@ -120,7 +120,7 @@ export const testNoblePrivateKeyVectors = (): TestResult[] => {
       const expectedCompressed = secp256k1.getPublicKey(privateKeyBytes, true);
       const expectedUncompressed = secp256k1.getPublicKey(
         privateKeyBytes,
-        false
+        false,
       );
 
       // Test compressed format

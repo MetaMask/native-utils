@@ -29,7 +29,7 @@ export type PrivKey = Hex | bigint;
  * @returns Uint8Array containing the 32-byte Keccak-256 hash
  */
 export function keccak256(
-  data: string | number[] | ArrayBuffer | Uint8Array
+  data: string | number[] | ArrayBuffer | Uint8Array,
 ): Uint8Array {
   let result: ArrayBuffer;
 
@@ -50,7 +50,7 @@ export function keccak256(
     result = NitroSecp256k1HybridObject.keccak256FromBytes(buffer);
   } else {
     throw new Error(
-      'Data must be a hex string, number[], ArrayBuffer, or Uint8Array'
+      'Data must be a hex string, number[], ArrayBuffer, or Uint8Array',
     );
   }
 
@@ -68,7 +68,7 @@ export function keccak256(
  */
 export function getPublicKey(
   privateKey: PrivKey,
-  isCompressed: boolean = true
+  isCompressed: boolean = true,
 ): Uint8Array {
   let result: ArrayBuffer;
 
@@ -81,7 +81,7 @@ export function getPublicKey(
     const privateKeyBuffer = uint8ArrayToArrayBuffer(privateKeyBytes);
     result = NitroSecp256k1HybridObject.toPublicKeyFromBytes(
       privateKeyBuffer,
-      isCompressed
+      isCompressed,
     );
   } else if (privateKey instanceof Uint8Array) {
     // Convert Uint8Array to ArrayBuffer (C++ will handle length and scalar validation)
@@ -91,7 +91,7 @@ export function getPublicKey(
     const privateKeyBuffer = uint8ArrayToArrayBuffer(privateKey);
     result = NitroSecp256k1HybridObject.toPublicKeyFromBytes(
       privateKeyBuffer,
-      isCompressed
+      isCompressed,
     );
   } else {
     throw new Error('Private key must be a hex string, Uint8Array, or bigint');
@@ -129,7 +129,7 @@ export function hmacSha512(key: Uint8Array, data: Uint8Array): Uint8Array {
  */
 export function pubToAddress(
   pubKey: Uint8Array,
-  sanitize: boolean = false
+  sanitize: boolean = false,
 ): Uint8Array {
   // Convert input to ArrayBuffer
   const pubKeyBuffer = uint8ArrayToArrayBuffer(pubKey);
@@ -137,7 +137,7 @@ export function pubToAddress(
   // Call native implementation
   const result = NitroSecp256k1HybridObject.pubToAddress(
     pubKeyBuffer,
-    sanitize
+    sanitize,
   );
 
   // Convert result from ArrayBuffer to Uint8Array

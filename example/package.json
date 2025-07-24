@@ -5,12 +5,12 @@
   "scripts": {
     "android": "react-native run-android",
     "android:release": "react-native run-android --mode release",
+    "build:android": "react-native build-android --extra-params \"--no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a\"",
+    "build:ios": "react-native build-ios --mode Debug",
     "clean": "cd android && ./gradlew clean && cd ..",
     "ios": "react-native run-ios",
     "ios:release": "react-native run-ios --mode release",
-    "start": "react-native start",
-    "build:android": "react-native build-android --extra-params \"--no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a\"",
-    "build:ios": "react-native build-ios --mode Debug"
+    "start": "react-native start"
   },
   "dependencies": {
     "@ethereumjs/util": "^10.0.0",

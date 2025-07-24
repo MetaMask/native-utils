@@ -5,6 +5,7 @@ import prettier from 'eslint-plugin-prettier';
 import { defineConfig } from 'eslint/config';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import prettierConfig from './.prettierrc.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,22 +21,11 @@ export default defineConfig([
     plugins: { prettier },
     rules: {
       'react/react-in-jsx-scope': 'off',
-      'prettier/prettier': [
-        'error',
-        {
-          quoteProps: 'consistent',
-          singleQuote: true,
-          tabWidth: 2,
-          trailingComma: 'es5',
-          useTabs: false,
-        },
-      ],
+      'no-bitwise': 'off',
+      'prettier/prettier': ['error', prettierConfig],
     },
   },
   {
-    ignores: [
-      'node_modules/',
-      'lib/'
-    ],
+    ignores: ['node_modules/', 'lib/', '.yarn/', 'eslint.config.mjs', 'cpp/'],
   },
 ]);

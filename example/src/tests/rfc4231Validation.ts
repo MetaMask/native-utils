@@ -1,7 +1,13 @@
 import { hmacSha512 } from '@metamask/native-utils';
 import { hmac } from '@noble/hashes/hmac';
 import { sha512 } from '@noble/hashes/sha2';
-import { hexToUint8Array, utf8ToBytes, uint8ArrayToHex, concatBytes, truncate } from '../testUtils';
+import {
+  hexToUint8Array,
+  utf8ToBytes,
+  uint8ArrayToHex,
+  concatBytes,
+  truncate,
+} from '../testUtils';
 
 export interface ValidationResult {
   testCase: number;
@@ -38,7 +44,7 @@ const RFC4231_EXACT_VECTORS = [
     data: [
       hexToUint8Array(
         'dddddddddddddddddddddddddddddddddddddddddddddddddd' +
-          'dddddddddddddddddddddddddddddddddddddddddddddddddd'
+          'dddddddddddddddddddddddddddddddddddddddddddddddddd',
       ),
     ],
     expectedSha512:
@@ -50,7 +56,7 @@ const RFC4231_EXACT_VECTORS = [
     key: hexToUint8Array('0102030405060708090a0b0c0d0e0f10111213141516171819'),
     data: [
       hexToUint8Array(
-        'cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd'
+        'cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd',
       ),
     ],
     expectedSha512:
@@ -75,7 +81,7 @@ const RFC4231_EXACT_VECTORS = [
         'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
         'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
         'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
-        'aaaaaa'
+        'aaaaaa',
     ),
     data: [
       utf8ToBytes('Test Using Large'),
@@ -98,7 +104,7 @@ const RFC4231_EXACT_VECTORS = [
         'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
         'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
         'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
-        'aaaaaa'
+        'aaaaaa',
     ),
     data: [
       utf8ToBytes('This is a test u'),
@@ -180,7 +186,7 @@ export function validateNISTVectors(): ValidationResult[] {
     {
       testCase: 3,
       input: utf8ToBytes(
-        'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq'
+        'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq',
       ),
       expected:
         'e0657364f9603a276d94930f90a6b19f3ce4001ab494c4fdf7ff541609e05d2e48ca6454a4390feb12b8eacebb503ba2517f5e2454d7d77e8b44d7cca8f752cd',
@@ -188,7 +194,7 @@ export function validateNISTVectors(): ValidationResult[] {
     {
       testCase: 4,
       input: utf8ToBytes(
-        'abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu'
+        'abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu',
       ),
       expected:
         'ece33db7448f63f4d460ac8b86bdf02fa6f5c3279a2a5d59df26827bec5315a44eb85d40ee4df3a7272a9596a0bc27091466724e9357183e554c9ec5fdf6d099',

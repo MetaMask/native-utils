@@ -2,7 +2,13 @@ import { hmacSha512 } from '@metamask/native-utils';
 import { hmac } from '@noble/hashes/hmac';
 import { sha512 } from '@noble/hashes/sha2';
 import type { TestResult } from '../testUtils';
-import { hexToUint8Array, utf8ToBytes, uint8ArrayToHex, concatBytes, truncate } from '../testUtils';
+import {
+  hexToUint8Array,
+  utf8ToBytes,
+  uint8ArrayToHex,
+  concatBytes,
+  truncate,
+} from '../testUtils';
 
 /**
  * RFC 4231 Test Vectors for HMAC-SHA512
@@ -31,7 +37,7 @@ const RFC4231_VECTORS = [
     data: [
       hexToUint8Array(
         'dddddddddddddddddddddddddddddddddddddddddddddddddd' +
-          'dddddddddddddddddddddddddddddddddddddddddddddddddd'
+          'dddddddddddddddddddddddddddddddddddddddddddddddddd',
       ),
     ],
     expected:
@@ -43,7 +49,7 @@ const RFC4231_VECTORS = [
     key: hexToUint8Array('0102030405060708090a0b0c0d0e0f10111213141516171819'),
     data: [
       hexToUint8Array(
-        'cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd'
+        'cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd',
       ),
     ],
     expected:
@@ -68,7 +74,7 @@ const RFC4231_VECTORS = [
         'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
         'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
         'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
-        'aaaaaa'
+        'aaaaaa',
     ),
     data: [
       utf8ToBytes('Test Using Large'),
@@ -91,7 +97,7 @@ const RFC4231_VECTORS = [
         'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
         'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
         'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
-        'aaaaaa'
+        'aaaaaa',
     ),
     data: [
       utf8ToBytes('This is a test u'),
@@ -131,7 +137,7 @@ const NIST_VECTORS = [
   {
     name: 'NIST Vector 3 (56 chars)',
     input: utf8ToBytes(
-      'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq'
+      'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq',
     ),
     expected:
       'e0657364f9603a276d94930f90a6b19f3ce4001ab494c4fdf7ff541609e05d2e48ca6454a4390feb12b8eacebb503ba2517f5e2454d7d77e8b44d7cca8f752cd',
@@ -139,7 +145,7 @@ const NIST_VECTORS = [
   {
     name: 'NIST Vector 4 (112 chars)',
     input: utf8ToBytes(
-      'abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu'
+      'abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu',
     ),
     expected:
       'ece33db7448f63f4d460ac8b86bdf02fa6f5c3279a2a5d59df26827bec5315a44eb85d40ee4df3a7272a9596a0bc27091466724e9357183e554c9ec5fdf6d099',
@@ -196,7 +202,7 @@ export function testRFC4231Vectors(): TestResult[] {
         const streamingResult = hmac(
           sha512,
           vector.key,
-          concatBytes(...vector.data)
+          concatBytes(...vector.data),
         );
         const truncatedStreaming = truncate(streamingResult, vector.truncate);
 
@@ -403,7 +409,7 @@ export function testCryptocurrencyScenarios(): TestResult[] {
       key: utf8ToBytes('mnemonic passphrase'),
       data: concatBytes(
         utf8ToBytes('salt'),
-        new Uint8Array([0x00, 0x00, 0x00, 0x01])
+        new Uint8Array([0x00, 0x00, 0x00, 0x01]),
       ),
     },
     {
@@ -411,7 +417,7 @@ export function testCryptocurrencyScenarios(): TestResult[] {
       key: new Uint8Array(32).fill(0x05), // Mock base key
       data: concatBytes(
         utf8ToBytes('lightning'),
-        new Uint8Array(32).fill(0x06)
+        new Uint8Array(32).fill(0x06),
       ),
     },
   ];
@@ -534,16 +540,16 @@ export function testProblematicInputs(): TestResult[] {
     {
       name: 'Sha512/384 issue reproduction',
       key: hexToUint8Array(
-        '000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+        '000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
       ),
       data: concatBytes(
         hexToUint8Array(
-          '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101'
+          '010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101',
         ),
         hexToUint8Array('00'),
         hexToUint8Array(
-          '6b9d3dad2e1b8c1c05b19875b6659f4de23c3b667bf297ba9aa47740787137d896d5724e4c70a825f872c9ea60d2edf59a9083505bc92276aec4be312696ef7bf3bf603f4bbd381196a029f340585312313bca4a9b5b890efee42c77b1ee25fe'
-        )
+          '6b9d3dad2e1b8c1c05b19875b6659f4de23c3b667bf297ba9aa47740787137d896d5724e4c70a825f872c9ea60d2edf59a9083505bc92276aec4be312696ef7bf3bf603f4bbd381196a029f340585312313bca4a9b5b890efee42c77b1ee25fe',
+        ),
       ),
     },
     {
@@ -659,8 +665,9 @@ export function testStreamingBehavior(): TestResult[] {
           name: testCase.name,
           success: false,
           message: `Results don't match. Native: ${uint8ArrayToHex(
-            nativeResult.slice(0, 8), false
-          )}..., Noble: ${uint8ArrayToHex(nobleResult.slice(0, 8)), false}...`,
+            nativeResult.slice(0, 8),
+            false,
+          )}..., Noble: ${(uint8ArrayToHex(nobleResult.slice(0, 8)), false)}...`,
         });
       }
     } catch (error) {
@@ -717,7 +724,8 @@ export function testSpecialConstants(): TestResult[] {
           name: testCase.name,
           success: true,
           message: `Native and Noble results match. Result: ${uint8ArrayToHex(
-            nativeResult.slice(0, 8), false
+            nativeResult.slice(0, 8),
+            false,
           )}...`,
         });
       } else {
@@ -725,8 +733,9 @@ export function testSpecialConstants(): TestResult[] {
           name: testCase.name,
           success: false,
           message: `Results don't match. Native: ${uint8ArrayToHex(
-            nativeResult.slice(0, 8), false
-          )}..., Noble: ${uint8ArrayToHex(nobleResult.slice(0, 8)), false}...`,
+            nativeResult.slice(0, 8),
+            false,
+          )}..., Noble: ${(uint8ArrayToHex(nobleResult.slice(0, 8)), false)}...`,
         });
       }
     } catch (error) {

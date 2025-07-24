@@ -32,7 +32,6 @@ const testCases = [
   },
 ];
 
-
 // Basic functionality test
 export const testBasicFunctionality = (): TestResult[] => {
   const results: TestResult[] = [];
@@ -494,7 +493,7 @@ export const testErrorHandling = (): TestResult[] => {
   try {
     getPublicKey(
       '0000000000000000000000000000000000000000000000000000000000000000',
-      true
+      true,
     );
     results.push({
       name: 'Zero key handling',

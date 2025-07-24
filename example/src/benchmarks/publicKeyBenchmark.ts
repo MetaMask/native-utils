@@ -47,7 +47,7 @@ export interface BenchmarkSuite {
     overallIopsNative: number;
     overallIopsJs: number;
   };
-  }
+}
 
 import { hexToUint8Array, calculateStats } from '../testUtils';
 
@@ -57,7 +57,7 @@ async function runSingleBenchmark(
   privateKey: string,
   compressed: boolean,
   iterations: number = 100,
-  runs: number = 5
+  runs: number = 5,
 ): Promise<BenchmarkResult> {
   const privateKeyBytes = hexToUint8Array(privateKey);
   const nativeTimings: number[] = [];
@@ -132,7 +132,7 @@ function generateRandomPrivateKey(): string {
 
 // Comprehensive benchmark suite
 export async function runBenchmarkSuite(
-  progressCallback?: (current: number, total: number, testName: string) => void
+  progressCallback?: (current: number, total: number, testName: string) => void,
 ): Promise<BenchmarkSuite> {
   const testCases = [
     {
@@ -170,7 +170,7 @@ export async function runBenchmarkSuite(
       testCase.privateKey,
       testCase.compressed,
       testCase.iterations,
-      testCase.runs
+      testCase.runs,
     );
 
     results.push(result);
@@ -187,21 +187,21 @@ export async function runBenchmarkSuite(
     results.length;
   const totalNativeTime = results.reduce(
     (sum, r) => sum + r.native.totalTime,
-    0
+    0,
   );
   const totalJsTime = results.reduce(
     (sum, r) => sum + r.javascript.totalTime,
-    0
+    0,
   );
 
   // Calculate overall IOPS
   const totalNativeOperations = results.reduce(
     (sum, r) => sum + r.iterations * r.totalRuns,
-    0
+    0,
   );
   const totalJsOperations = results.reduce(
     (sum, r) => sum + r.iterations * r.totalRuns,
-    0
+    0,
   );
   const overallIopsNative =
     totalNativeTime > 0 ? (totalNativeOperations / totalNativeTime) * 1000 : 0;
@@ -221,19 +221,4 @@ export async function runBenchmarkSuite(
       overallIopsJs,
     },
   };
-}
-
-// Format benchmark suite summary
-export function formatBenchmarkSummary(suite: BenchmarkSuite): string {
-  return `
-BENCHMARK SUITE SUMMARY
-Tests: ${suite.summary.totalTests}
-Native Wins: ${suite.summary.nativeWins}
-JS Wins: ${suite.summary.jsWins}
-Average Speedup: ${suite.summary.averageSpeedup.toFixed(2)}x
-Total Native Time: ${suite.summary.totalNativeTime.toFixed(2)}ms
-Total JS Time: ${suite.summary.totalJsTime.toFixed(2)}ms
-Overall Native IOPS: ${suite.summary.overallIopsNative.toFixed(0)}
-Overall JS IOPS: ${suite.summary.overallIopsJs.toFixed(0)}
-`.trim();
 }

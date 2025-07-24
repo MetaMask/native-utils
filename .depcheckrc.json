@@ -3,8 +3,9 @@
     "@lavamoat/allow-scripts",
     "@lavamoat/preinstall-always-fail",
     "@metamask/auto-changelog",
-    "@metamask/eslint-config",
     "@metamask/eslint-config-*",
+    "@metamask/eslint-config",
+    "@react-native/eslint-config",
     "@types/*",
     "@typescript-eslint/utils",
     "@vitest/coverage-istanbul",
@@ -17,6 +18,7 @@
     "ts-node",
     "typedoc",
     "typescript-eslint",
+    "typescript",
     "vite"
   ]
 }

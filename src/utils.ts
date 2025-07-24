@@ -1,5 +1,6 @@
 // secp256k1 group order N (same as noble/secp256k1)
-export const N = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141n;
+export const N =
+  0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141n;
 
 /**
  * Convert bigint to 32-byte Uint8Array (big-endian)

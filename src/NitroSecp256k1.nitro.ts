@@ -6,7 +6,7 @@ export interface NitroSecp256k1
   toPublicKey(privateKey: string, isCompressed: boolean): ArrayBuffer;
   toPublicKeyFromBytes(
     privateKey: ArrayBuffer,
-    isCompressed: boolean
+    isCompressed: boolean,
   ): ArrayBuffer;
   hmacSha512(key: ArrayBuffer, data: ArrayBuffer): ArrayBuffer;
   pubToAddress(pubKey: ArrayBuffer, sanitize: boolean): ArrayBuffer;

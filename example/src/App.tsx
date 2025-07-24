@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Text,
   View,
@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import {
   runBenchmarkSuite,
-  formatBenchmarkSummary,
   type BenchmarkSuite,
 } from './benchmarks/publicKeyBenchmark';
 import {
@@ -36,7 +35,6 @@ import {
 } from './tests/rfc4231Validation';
 import {
   benchmarkBIP32Scenarios,
-  formatBenchmarkResults,
   type BenchmarkResult as HmacBenchmarkResult,
 } from './benchmarks/hmacSha512Benchmark';
 import { runAllPubToAddressTests } from './tests/pubToAddressTests';
@@ -44,22 +42,17 @@ import { runAllKeccak256Tests } from './tests/keccak256Tests';
 import type { TestResult } from './testUtils';
 import {
   runAllPubToAddressBenchmarks,
-  formatPubToAddressBenchmarkResults,
   type BenchmarkResult as PubToAddressBenchmarkResult,
 } from './benchmarks/pubToAddressBenchmark';
 import {
   runAllKeccak256Benchmarks,
-  formatKeccak256BenchmarkResults,
   type BenchmarkResult as Keccak256BenchmarkResult,
 } from './benchmarks/keccak256Benchmark';
 
 // Define test suite configuration
 interface TestSuite {
   name: string;
-  runner: () =>
-    | TestResult[]
-    | ValidationResult[]
-    | VerificationResult[];
+  runner: () => TestResult[] | ValidationResult[] | VerificationResult[];
   key: string;
 }
 
@@ -207,7 +200,7 @@ export default function App() {
   // Benchmark functions
   const runBenchmark = async (
     type: string,
-    benchmarkFn: () => Promise<any>
+    benchmarkFn: () => Promise<any>,
   ) => {
     setIsRunning(true);
 
@@ -220,7 +213,7 @@ export default function App() {
     } catch (error) {
       Alert.alert(
         'Benchmark Error',
-        `Failed to run ${type} benchmark: ${error}`
+        `Failed to run ${type} benchmark: ${error}`,
       );
     } finally {
       setIsRunning(false);
@@ -294,12 +287,18 @@ export default function App() {
           <View style={styles.buttonRow}>
             <View style={styles.buttonContainer}>
               <Button
-                title={isRunning ? '⏳ Running...' : '🚀 Public Key Generation Benchmark'}
+                title={
+                  isRunning
+                    ? '⏳ Running...'
+                    : '🚀 Public Key Generation Benchmark'
+                }
                 onPress={() =>
                   runBenchmark('suite', () =>
-                    runBenchmarkSuite((current: number, total: number, testName: string) => {
-                      setBenchmarkProgress({ current, total, testName });
-                    })
+                    runBenchmarkSuite(
+                      (current: number, total: number, testName: string) => {
+                        setBenchmarkProgress({ current, total, testName });
+                      },
+                    ),
                   )
                 }
                 disabled={isRunning}
@@ -318,11 +317,13 @@ export default function App() {
             </View>
             <View style={styles.buttonContainer}>
               <Button
-                title={isRunning ? '⏳ Running...' : '🏠 pubToAddress Full Benchmark'}
+                title={
+                  isRunning ? '⏳ Running...' : '🏠 pubToAddress Full Benchmark'
+                }
                 onPress={() =>
                   runBenchmark(
                     'pubToAddressSuite',
-                    runAllPubToAddressBenchmarks
+                    runAllPubToAddressBenchmarks,
                   )
                 }
                 disabled={isRunning}
@@ -332,7 +333,9 @@ export default function App() {
           <View style={styles.buttonRow}>
             <View style={styles.buttonContainer}>
               <Button
-                title={isRunning ? '⏳ Running...' : '🔍 Keccak256 Full Benchmark'}
+                title={
+                  isRunning ? '⏳ Running...' : '🔍 Keccak256 Full Benchmark'
+                }
                 onPress={() =>
                   runBenchmark('keccak256Suite', runAllKeccak256Benchmarks)
                 }
@@ -342,8 +345,8 @@ export default function App() {
           </View>
           {benchmarkProgress && (
             <Text style={styles.progressText}>
-              🔄 Running: {benchmarkProgress.testName} ({benchmarkProgress.current}
-              /{benchmarkProgress.total})
+              🔄 Running: {benchmarkProgress.testName} (
+              {benchmarkProgress.current}/{benchmarkProgress.total})
             </Text>
           )}
         </View>
@@ -507,50 +510,69 @@ export default function App() {
               🚀 Public Key Generation Benchmark
             </Text>
             <View style={styles.benchmarkSummary}>
-              <Text style={styles.benchmarkSummaryTitle}>📊 Performance Overview</Text>
-              <Text style={styles.benchmarkSummaryText}>
-                Tests: {benchmarkResults.suite.summary.totalTests} • Native Wins: {benchmarkResults.suite.summary.nativeWins} • JS Wins: {benchmarkResults.suite.summary.jsWins}
+              <Text style={styles.benchmarkSummaryTitle}>
+                📊 Performance Overview
               </Text>
               <Text style={styles.benchmarkSummaryText}>
-                Average Speedup: {benchmarkResults.suite.summary.averageSpeedup.toFixed(2)}x
+                Tests: {benchmarkResults.suite.summary.totalTests} • Native
+                Wins: {benchmarkResults.suite.summary.nativeWins} • JS Wins:{' '}
+                {benchmarkResults.suite.summary.jsWins}
               </Text>
               <Text style={styles.benchmarkSummaryText}>
-                Overall Native IOPS: {benchmarkResults.suite.summary.overallIopsNative.toFixed(0)} • JS IOPS: {benchmarkResults.suite.summary.overallIopsJs.toFixed(0)}
+                Average Speedup:{' '}
+                {benchmarkResults.suite.summary.averageSpeedup.toFixed(2)}x
+              </Text>
+              <Text style={styles.benchmarkSummaryText}>
+                Overall Native IOPS:{' '}
+                {benchmarkResults.suite.summary.overallIopsNative.toFixed(0)} •
+                JS IOPS:{' '}
+                {benchmarkResults.suite.summary.overallIopsJs.toFixed(0)}
               </Text>
             </View>
             <Text style={styles.sectionSubtitle}>Individual Test Results:</Text>
-            {benchmarkResults.suite.results.map((result: any, index: number) => (
-              <View key={index} style={styles.benchmarkResult}>
-                <Text style={styles.benchmarkTitle}>
-                  {index % 2 === 0 ? '🔑' : '🔓'} {result.testName}
-                </Text>
-                <View style={styles.benchmarkMetrics}>
-                  <Text style={styles.benchmarkDetails}>
-                    🚀 Native: {result.native.averageTime.toFixed(3)}ms avg • {result.native.iops.toFixed(0)} ops/sec
+            {benchmarkResults.suite.results.map(
+              (result: any, index: number) => (
+                <View key={index} style={styles.benchmarkResult}>
+                  <Text style={styles.benchmarkTitle}>
+                    {index % 2 === 0 ? '🔑' : '🔓'} {result.testName}
                   </Text>
-                  <Text style={styles.benchmarkDetails}>
-                    📜 JavaScript: {result.javascript.averageTime.toFixed(3)}ms avg • {result.javascript.iops.toFixed(0)} ops/sec
-                  </Text>
-                  <Text
-                    style={[
-                      styles.benchmarkComparison,
-                      result.comparison.nativeIsFaster
-                        ? styles.success
-                        : styles.failure,
-                    ]}
-                  >
-                    ⚡ {result.comparison.speedupFactor.toFixed(2)}x{' '}
-                    {result.comparison.nativeIsFaster ? 'faster' : 'slower'} • {result.comparison.percentageDifference.toFixed(1)}% difference
-                  </Text>
-                  <Text style={styles.benchmarkRange}>
-                    📈 Range: {result.native.minTime.toFixed(3)}ms - {result.native.maxTime.toFixed(3)}ms (Native) | {result.javascript.minTime.toFixed(3)}ms - {result.javascript.maxTime.toFixed(3)}ms (JS)
-                  </Text>
-                  <Text style={styles.benchmarkStats}>
-                    📊 Std Dev: ±{result.native.standardDeviation.toFixed(3)}ms (Native) • ±{result.javascript.standardDeviation.toFixed(3)}ms (JS)
-                  </Text>
+                  <View style={styles.benchmarkMetrics}>
+                    <Text style={styles.benchmarkDetails}>
+                      🚀 Native: {result.native.averageTime.toFixed(3)}ms avg •{' '}
+                      {result.native.iops.toFixed(0)} ops/sec
+                    </Text>
+                    <Text style={styles.benchmarkDetails}>
+                      📜 JavaScript: {result.javascript.averageTime.toFixed(3)}
+                      ms avg • {result.javascript.iops.toFixed(0)} ops/sec
+                    </Text>
+                    <Text
+                      style={[
+                        styles.benchmarkComparison,
+                        result.comparison.nativeIsFaster
+                          ? styles.success
+                          : styles.failure,
+                      ]}
+                    >
+                      ⚡ {result.comparison.speedupFactor.toFixed(2)}x{' '}
+                      {result.comparison.nativeIsFaster ? 'faster' : 'slower'} •{' '}
+                      {result.comparison.percentageDifference.toFixed(1)}%
+                      difference
+                    </Text>
+                    <Text style={styles.benchmarkRange}>
+                      📈 Range: {result.native.minTime.toFixed(3)}ms -{' '}
+                      {result.native.maxTime.toFixed(3)}ms (Native) |{' '}
+                      {result.javascript.minTime.toFixed(3)}ms -{' '}
+                      {result.javascript.maxTime.toFixed(3)}ms (JS)
+                    </Text>
+                    <Text style={styles.benchmarkStats}>
+                      📊 Std Dev: ±{result.native.standardDeviation.toFixed(3)}
+                      ms (Native) • ±
+                      {result.javascript.standardDeviation.toFixed(3)}ms (JS)
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            ))}
+              ),
+            )}
           </View>
         )}
 
@@ -560,7 +582,9 @@ export default function App() {
               🔐 HMAC-SHA512 BIP32 Benchmark Suite
             </Text>
             <View style={styles.benchmarkSummary}>
-              <Text style={styles.benchmarkSummaryTitle}>📊 Performance Overview</Text>
+              <Text style={styles.benchmarkSummaryTitle}>
+                📊 Performance Overview
+              </Text>
               <Text style={styles.benchmarkSummaryText}>
                 {benchmarkResults.hmacSuite.length} test scenarios completed
               </Text>
@@ -569,14 +593,17 @@ export default function App() {
             {benchmarkResults.hmacSuite.map((result: any, index: number) => (
               <View key={index} style={styles.benchmarkResult}>
                 <Text style={styles.benchmarkTitle}>
-                  {index === 0 ? '🔑' : index === 1 ? '🔒' : '🌱'} {result.testName}
+                  {index === 0 ? '🔑' : index === 1 ? '🔒' : '🌱'}{' '}
+                  {result.testName}
                 </Text>
                 <View style={styles.benchmarkMetrics}>
                   <Text style={styles.benchmarkDetails}>
-                    🚀 Native: {result.native.averageTime.toFixed(3)}ms avg • {result.native.iops.toFixed(0)} ops/sec
+                    🚀 Native: {result.native.averageTime.toFixed(3)}ms avg •{' '}
+                    {result.native.iops.toFixed(0)} ops/sec
                   </Text>
                   <Text style={styles.benchmarkDetails}>
-                    📜 JavaScript: {result.javascript.averageTime.toFixed(3)}ms avg • {result.javascript.iops.toFixed(0)} ops/sec
+                    📜 JavaScript: {result.javascript.averageTime.toFixed(3)}ms
+                    avg • {result.javascript.iops.toFixed(0)} ops/sec
                   </Text>
                   <Text
                     style={[
@@ -587,10 +614,15 @@ export default function App() {
                     ]}
                   >
                     ⚡ {result.comparison.speedupFactor.toFixed(2)}x{' '}
-                    {result.comparison.nativeIsFaster ? 'faster' : 'slower'} • {result.comparison.percentageImprovement.toFixed(1)}% improvement
+                    {result.comparison.nativeIsFaster ? 'faster' : 'slower'} •{' '}
+                    {result.comparison.percentageImprovement.toFixed(1)}%
+                    improvement
                   </Text>
                   <Text style={styles.benchmarkRange}>
-                    📈 Range: {result.native.minTime.toFixed(3)}ms - {result.native.maxTime.toFixed(3)}ms (Native) | {result.javascript.minTime.toFixed(3)}ms - {result.javascript.maxTime.toFixed(3)}ms (JS)
+                    📈 Range: {result.native.minTime.toFixed(3)}ms -{' '}
+                    {result.native.maxTime.toFixed(3)}ms (Native) |{' '}
+                    {result.javascript.minTime.toFixed(3)}ms -{' '}
+                    {result.javascript.maxTime.toFixed(3)}ms (JS)
                   </Text>
                 </View>
               </View>
@@ -604,60 +636,88 @@ export default function App() {
               🏠 Public Key → Address Benchmark Suite
             </Text>
             <View style={styles.benchmarkSummary}>
-              <Text style={styles.benchmarkSummaryTitle}>📊 Performance Overview</Text>
-              <Text style={styles.benchmarkSummaryText}>
-                {benchmarkResults.pubToAddressSuite.length} conversion scenarios tested
+              <Text style={styles.benchmarkSummaryTitle}>
+                📊 Performance Overview
               </Text>
               <Text style={styles.benchmarkSummaryText}>
-                Average Speedup: {(benchmarkResults.pubToAddressSuite.reduce((sum: number, r: any) => sum + r.comparison.speedupFactor, 0) / benchmarkResults.pubToAddressSuite.length).toFixed(2)}x
+                {benchmarkResults.pubToAddressSuite.length} conversion scenarios
+                tested
               </Text>
               <Text style={styles.benchmarkSummaryText}>
-                All Faster: {benchmarkResults.pubToAddressSuite.every((r: any) => r.comparison.nativeIsFaster) ? '✅ Yes' : '❌ No'}
+                Average Speedup:{' '}
+                {(
+                  benchmarkResults.pubToAddressSuite.reduce(
+                    (sum: number, r: any) => sum + r.comparison.speedupFactor,
+                    0,
+                  ) / benchmarkResults.pubToAddressSuite.length
+                ).toFixed(2)}
+                x
+              </Text>
+              <Text style={styles.benchmarkSummaryText}>
+                All Faster:{' '}
+                {benchmarkResults.pubToAddressSuite.every(
+                  (r: any) => r.comparison.nativeIsFaster,
+                )
+                  ? '✅ Yes'
+                  : '❌ No'}
               </Text>
             </View>
             <Text style={styles.sectionSubtitle}>Individual Test Results:</Text>
-            {benchmarkResults.pubToAddressSuite.map((result: any, index: number) => {
-              const getTestIcon = (testName: string) => {
-                if (testName.includes('64-byte')) return '📏';
-                if (testName.includes('65-byte')) return '🔧';
-                if (testName.includes('Multiple')) return '🔄';
-                if (testName.includes('Mixed')) return '🎯';
-                return '🏠';
-              };
+            {benchmarkResults.pubToAddressSuite.map(
+              (result: any, index: number) => {
+                const getTestIcon = (testName: string) => {
+                  if (testName.includes('64-byte')) return '📏';
+                  if (testName.includes('65-byte')) return '🔧';
+                  if (testName.includes('Multiple')) return '🔄';
+                  if (testName.includes('Mixed')) return '🎯';
+                  return '🏠';
+                };
 
-              return (
-                <View key={index} style={styles.benchmarkResult}>
-                  <Text style={styles.benchmarkTitle}>
-                    {getTestIcon(result.testName)} {result.testName}
-                  </Text>
-                  <View style={styles.benchmarkMetrics}>
-                    <Text style={styles.benchmarkDetails}>
-                      🚀 Native: {result.native.averageTime.toFixed(3)}ms avg • {result.native.iops.toFixed(0)} ops/sec
+                return (
+                  <View key={index} style={styles.benchmarkResult}>
+                    <Text style={styles.benchmarkTitle}>
+                      {getTestIcon(result.testName)} {result.testName}
                     </Text>
-                    <Text style={styles.benchmarkDetails}>
-                      📜 JavaScript: {result.javascript.averageTime.toFixed(3)}ms avg • {result.javascript.iops.toFixed(0)} ops/sec
-                    </Text>
-                    <Text
-                      style={[
-                        styles.benchmarkComparison,
-                        result.comparison.nativeIsFaster
-                          ? styles.success
-                          : styles.failure,
-                      ]}
-                    >
-                      ⚡ {result.comparison.speedupFactor.toFixed(2)}x{' '}
-                      {result.comparison.nativeIsFaster ? 'faster' : 'slower'} • {result.comparison.performanceGain.toFixed(1)}% improvement
-                    </Text>
-                    <Text style={styles.benchmarkRange}>
-                      📈 Range: {result.native.minTime.toFixed(3)}ms - {result.native.maxTime.toFixed(3)}ms (Native) | {result.javascript.minTime.toFixed(3)}ms - {result.javascript.maxTime.toFixed(3)}ms (JS)
-                    </Text>
-                    <Text style={styles.benchmarkStats}>
-                      📊 Std Dev: ±{result.native.standardDeviation.toFixed(3)}ms (Native) • ±{result.javascript.standardDeviation.toFixed(3)}ms (JS)
-                    </Text>
+                    <View style={styles.benchmarkMetrics}>
+                      <Text style={styles.benchmarkDetails}>
+                        🚀 Native: {result.native.averageTime.toFixed(3)}ms avg
+                        • {result.native.iops.toFixed(0)} ops/sec
+                      </Text>
+                      <Text style={styles.benchmarkDetails}>
+                        📜 JavaScript:{' '}
+                        {result.javascript.averageTime.toFixed(3)}ms avg •{' '}
+                        {result.javascript.iops.toFixed(0)} ops/sec
+                      </Text>
+                      <Text
+                        style={[
+                          styles.benchmarkComparison,
+                          result.comparison.nativeIsFaster
+                            ? styles.success
+                            : styles.failure,
+                        ]}
+                      >
+                        ⚡ {result.comparison.speedupFactor.toFixed(2)}x{' '}
+                        {result.comparison.nativeIsFaster ? 'faster' : 'slower'}{' '}
+                        • {result.comparison.performanceGain.toFixed(1)}%
+                        improvement
+                      </Text>
+                      <Text style={styles.benchmarkRange}>
+                        📈 Range: {result.native.minTime.toFixed(3)}ms -{' '}
+                        {result.native.maxTime.toFixed(3)}ms (Native) |{' '}
+                        {result.javascript.minTime.toFixed(3)}ms -{' '}
+                        {result.javascript.maxTime.toFixed(3)}ms (JS)
+                      </Text>
+                      <Text style={styles.benchmarkStats}>
+                        📊 Std Dev: ±
+                        {result.native.standardDeviation.toFixed(3)}ms (Native)
+                        • ±{result.javascript.standardDeviation.toFixed(3)}ms
+                        (JS)
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              );
-            })}
+                );
+              },
+            )}
           </View>
         )}
 
@@ -667,63 +727,90 @@ export default function App() {
               🔍 Keccak256 Hashing Benchmark Suite
             </Text>
             <View style={styles.benchmarkSummary}>
-              <Text style={styles.benchmarkSummaryTitle}>📊 Performance Overview</Text>
-              <Text style={styles.benchmarkSummaryText}>
-                {benchmarkResults.keccak256Suite.length} hashing scenarios tested
+              <Text style={styles.benchmarkSummaryTitle}>
+                📊 Performance Overview
               </Text>
               <Text style={styles.benchmarkSummaryText}>
-                Average Speedup: {(benchmarkResults.keccak256Suite.reduce((sum: number, r: any) => sum + r.comparison.speedupFactor, 0) / benchmarkResults.keccak256Suite.length).toFixed(2)}x
+                {benchmarkResults.keccak256Suite.length} hashing scenarios
+                tested
               </Text>
               <Text style={styles.benchmarkSummaryText}>
-                All Faster: {benchmarkResults.keccak256Suite.every((r: any) => r.comparison.nativeIsFaster) ? '✅ Yes' : '❌ No'}
+                Average Speedup:{' '}
+                {(
+                  benchmarkResults.keccak256Suite.reduce(
+                    (sum: number, r: any) => sum + r.comparison.speedupFactor,
+                    0,
+                  ) / benchmarkResults.keccak256Suite.length
+                ).toFixed(2)}
+                x
+              </Text>
+              <Text style={styles.benchmarkSummaryText}>
+                All Faster:{' '}
+                {benchmarkResults.keccak256Suite.every(
+                  (r: any) => r.comparison.nativeIsFaster,
+                )
+                  ? '✅ Yes'
+                  : '❌ No'}
               </Text>
             </View>
             <Text style={styles.sectionSubtitle}>Individual Test Results:</Text>
-            {benchmarkResults.keccak256Suite.map((result: any, index: number) => {
-              const getTestIcon = (testName: string) => {
-                if (testName.includes('Small')) return '📝';
-                if (testName.includes('Private')) return '🔑';
-                if (testName.includes('Public')) return '🔓';
-                if (testName.includes('BIP32')) return '🌱';
-                if (testName.includes('Transaction')) return '💳';
-                if (testName.includes('ETH Address')) return '⚡';
-                if (testName.includes('Hex vs Bytes')) return '🔄';
-                return '🔍';
-              };
+            {benchmarkResults.keccak256Suite.map(
+              (result: any, index: number) => {
+                const getTestIcon = (testName: string) => {
+                  if (testName.includes('Small')) return '📝';
+                  if (testName.includes('Private')) return '🔑';
+                  if (testName.includes('Public')) return '🔓';
+                  if (testName.includes('BIP32')) return '🌱';
+                  if (testName.includes('Transaction')) return '💳';
+                  if (testName.includes('ETH Address')) return '⚡';
+                  if (testName.includes('Hex vs Bytes')) return '🔄';
+                  return '🔍';
+                };
 
-              return (
-                <View key={index} style={styles.benchmarkResult}>
-                  <Text style={styles.benchmarkTitle}>
-                    {getTestIcon(result.testName)} {result.testName}
-                  </Text>
-                  <View style={styles.benchmarkMetrics}>
-                    <Text style={styles.benchmarkDetails}>
-                      🚀 Native: {result.native.averageTime.toFixed(3)}ms avg • {result.native.iops.toFixed(0)} ops/sec
+                return (
+                  <View key={index} style={styles.benchmarkResult}>
+                    <Text style={styles.benchmarkTitle}>
+                      {getTestIcon(result.testName)} {result.testName}
                     </Text>
-                    <Text style={styles.benchmarkDetails}>
-                      📜 Noble: {result.javascript.averageTime.toFixed(3)}ms avg • {result.javascript.iops.toFixed(0)} ops/sec
-                    </Text>
-                    <Text
-                      style={[
-                        styles.benchmarkComparison,
-                        result.comparison.nativeIsFaster
-                          ? styles.success
-                          : styles.failure,
-                      ]}
-                    >
-                      ⚡ {result.comparison.speedupFactor.toFixed(2)}x{' '}
-                      {result.comparison.nativeIsFaster ? 'faster' : 'slower'} • {result.comparison.performanceGain.toFixed(1)}% improvement
-                    </Text>
-                    <Text style={styles.benchmarkRange}>
-                      📈 Range: {result.native.minTime.toFixed(3)}ms - {result.native.maxTime.toFixed(3)}ms (Native) | {result.javascript.minTime.toFixed(3)}ms - {result.javascript.maxTime.toFixed(3)}ms (Noble)
-                    </Text>
-                    <Text style={styles.benchmarkStats}>
-                      📊 Std Dev: ±{result.native.standardDeviation.toFixed(3)}ms (Native) • ±{result.javascript.standardDeviation.toFixed(3)}ms (Noble)
-                    </Text>
+                    <View style={styles.benchmarkMetrics}>
+                      <Text style={styles.benchmarkDetails}>
+                        🚀 Native: {result.native.averageTime.toFixed(3)}ms avg
+                        • {result.native.iops.toFixed(0)} ops/sec
+                      </Text>
+                      <Text style={styles.benchmarkDetails}>
+                        📜 Noble: {result.javascript.averageTime.toFixed(3)}ms
+                        avg • {result.javascript.iops.toFixed(0)} ops/sec
+                      </Text>
+                      <Text
+                        style={[
+                          styles.benchmarkComparison,
+                          result.comparison.nativeIsFaster
+                            ? styles.success
+                            : styles.failure,
+                        ]}
+                      >
+                        ⚡ {result.comparison.speedupFactor.toFixed(2)}x{' '}
+                        {result.comparison.nativeIsFaster ? 'faster' : 'slower'}{' '}
+                        • {result.comparison.performanceGain.toFixed(1)}%
+                        improvement
+                      </Text>
+                      <Text style={styles.benchmarkRange}>
+                        📈 Range: {result.native.minTime.toFixed(3)}ms -{' '}
+                        {result.native.maxTime.toFixed(3)}ms (Native) |{' '}
+                        {result.javascript.minTime.toFixed(3)}ms -{' '}
+                        {result.javascript.maxTime.toFixed(3)}ms (Noble)
+                      </Text>
+                      <Text style={styles.benchmarkStats}>
+                        📊 Std Dev: ±
+                        {result.native.standardDeviation.toFixed(3)}ms (Native)
+                        • ±{result.javascript.standardDeviation.toFixed(3)}ms
+                        (Noble)
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              );
-            })}
+                );
+              },
+            )}
           </View>
         )}
       </View>
