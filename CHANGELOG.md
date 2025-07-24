@@ -7,4 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/MetaMask/metamask-module-template/
+### Added
+
+- Initial release
+
+[Unreleased]: https://github.com/MetaMask/native-utils/
