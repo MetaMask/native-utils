@@ -1,3 +1,7 @@
 [submodule "cpp/secp256k1"]
 	path = cpp/secp256k1
 	url = https://github.com/bitcoin-core/secp256k1.git
+[submodule "cpp/libsodium_cmake/libsodium"]
+	path = cpp/libsodium_cmake/libsodium
+	url = https://github.com/jedisct1/libsodium.git
+	branch = stable

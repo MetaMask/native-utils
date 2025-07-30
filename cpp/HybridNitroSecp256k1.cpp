@@ -1,7 +1,7 @@
 #include "HybridNitroSecp256k1.hpp"
 #include "secp256k1_wrapper.h"
-#include "hmac_sha512.h"
 #include "keccak-tiny.h"
+#include <sodium.h>
 #include <stdexcept>
 
 namespace margelo::nitro::nitrosecp256k1 {
@@ -159,12 +159,24 @@ std::shared_ptr<ArrayBuffer> HybridNitroSecp256k1::hmacSha512(const std::shared_
     const uint8_t* keyBytes = static_cast<const uint8_t*>(key->data());
     const uint8_t* dataBytes = static_cast<const uint8_t*>(data->data());
     
-    // Create output buffer (SHA512 produces 64 bytes)
-    auto buffer = ArrayBuffer::allocate(SHA512_DIGEST_SIZE);
+    // Create output buffer (libsodium HMAC-SHA512 produces 64 bytes)
+    auto buffer = ArrayBuffer::allocate(crypto_auth_hmacsha512_BYTES);
     uint8_t* output = static_cast<uint8_t*>(buffer->data());
     
-    // Use our standalone HMAC-SHA512 implementation
-    hmac_sha512(keyBytes, key->size(), dataBytes, data->size(), output);
+    // Use libsodium's streaming HMAC-SHA512 API to support arbitrary key lengths
+    crypto_auth_hmacsha512_state state;
+    
+    if (crypto_auth_hmacsha512_init(&state, keyBytes, key->size()) != 0) {
+        throw std::runtime_error("HMAC-SHA512 initialization failed");
+    }
+    
+    if (crypto_auth_hmacsha512_update(&state, dataBytes, data->size()) != 0) {
+        throw std::runtime_error("HMAC-SHA512 update failed");
+    }
+    
+    if (crypto_auth_hmacsha512_final(&state, output) != 0) {
+        throw std::runtime_error("HMAC-SHA512 finalization failed");
+    }
     
     return buffer;
 }

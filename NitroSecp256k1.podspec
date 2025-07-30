@@ -16,11 +16,27 @@ Pod::Spec.new do |s|
   s.source_files = [
     "ios/**/*.{swift}",
     "ios/**/*.{m,mm}",
-    "cpp/**/*.{hpp,cpp}",
-    "cpp/**/*.{h,c}",
-    "cpp/secp256k1/src/secp256k1.c",
-    "cpp/secp256k1/src/precomputed_ecmult.c",
-    "cpp/secp256k1/src/precomputed_ecmult_gen.c",
+    "cpp/*.{hpp,cpp}",
+    "cpp/*.{h,c}",
+    "cpp/secp256k1/src/*.{h,c}",
+    "cpp/libsodium_cmake/libsodium/src/libsodium/**/*.{c,h}",
+  ]
+
+  s.exclude_files = [
+    # Exclude all private headers that cause conflicts
+    "cpp/libsodium_cmake/libsodium/src/libsodium/include/sodium/private/**/*",
+    # Exclude secp256k1 test files
+    "cpp/secp256k1/src/tests.c",
+    "cpp/secp256k1/src/tests_exhaustive.c",
+    "cpp/secp256k1/src/ctime_tests.c",
+    "cpp/secp256k1/src/bench.c",
+    "cpp/secp256k1/src/bench_internal.c",
+    "cpp/secp256k1/src/bench_ecmult.c",
+    "cpp/secp256k1/src/testrand.h",
+    "cpp/secp256k1/src/testutil.h",
+    "cpp/secp256k1/src/selftest.h",
+    "cpp/secp256k1/src/**/tests_impl.h",
+    "cpp/secp256k1/src/**/bench_impl.h",
   ]
 
   s.public_header_files = [
@@ -29,6 +45,8 @@ Pod::Spec.new do |s|
     "cpp/secp256k1/include/secp256k1_ecdh.h",
     "cpp/secp256k1/include/secp256k1_schnorrsig.h",
     "cpp/secp256k1/include/secp256k1_extrakeys.h",
+    "cpp/libsodium_cmake/libsodium/src/libsodium/include/sodium.h",
+    "cpp/libsodium_cmake/libsodium/src/libsodium/include/sodium/**/*.h",
   ]
 
   s.header_dir = "secp256k1"
@@ -37,7 +55,7 @@ Pod::Spec.new do |s|
   s.pod_target_xcconfig = {
     # C++ compiler flags, mainly for folly.
     "GCC_PREPROCESSOR_DEFINITIONS" => "$(inherited) FOLLY_NO_CONFIG FOLLY_CFG_NO_COROUTINES USE_ECMULT_STATIC_PRECOMPUTATION USE_FIELD_10X26 USE_SCALAR_8X32 ECMULT_WINDOW_SIZE=15 ECMULT_GEN_PREC_BITS=4 ENABLE_MODULE_RECOVERY ENABLE_MODULE_ECDH ENABLE_MODULE_SCHNORRSIG ENABLE_MODULE_EXTRAKEYS",
-    "HEADER_SEARCH_PATHS" => "$(inherited) $(PODS_TARGET_SRCROOT)/cpp/secp256k1 $(PODS_TARGET_SRCROOT)/cpp/secp256k1/include $(PODS_TARGET_SRCROOT)/cpp/secp256k1/src",
+    "HEADER_SEARCH_PATHS" => "$(inherited) $(PODS_TARGET_SRCROOT)/cpp/secp256k1 $(PODS_TARGET_SRCROOT)/cpp/secp256k1/include $(PODS_TARGET_SRCROOT)/cpp/secp256k1/src $(PODS_TARGET_SRCROOT)/cpp/libsodium_cmake/libsodium/src/libsodium/include $(PODS_TARGET_SRCROOT)/cpp/libsodium_cmake/libsodium/src/libsodium/include/sodium",
     "OTHER_CFLAGS" => "$(inherited) -DUSE_ECMULT_STATIC_PRECOMPUTATION -DUSE_FIELD_10X26 -DUSE_SCALAR_8X32 -DECMULT_WINDOW_SIZE=15 -DECMULT_GEN_PREC_BITS=4 -DENABLE_MODULE_RECOVERY -DENABLE_MODULE_ECDH -DENABLE_MODULE_SCHNORRSIG -DENABLE_MODULE_EXTRAKEYS",
     "CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES" => "YES"
   }
