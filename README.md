@@ -6,6 +6,8 @@ This is a collection of native utils (mostly crypto functions) for MetaMask mobi
 
 - Super fast crypto functions (e.g. `keccak256`, `secp256k1`, `hmacSha512`)
 - It uses [official Bitcoin Core library](https://github.com/bitcoin-core/secp256k1) for secp256k1
+- For `hmacSha512` it uses [libsodium](https://github.com/jedisct1/libsodium) - very popular and established crypto library and we can use it for other function in future as well
+- For `keccak256` it uses extracted version from [solidity](https://github.com/ethereum/solidity) - it's the same implementation that is used in the Ethereum blockchain and it's very well tested
 - More than 300 tests to ensure correctness and compatibility with JS implementations (test cases are directly ported from `@noble/secp256k1`, `@noble/hashes`, `@ethereumjs/util`)
 - Benchmarks are included to show the performance improvements
 
