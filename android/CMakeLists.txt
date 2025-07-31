@@ -29,14 +29,13 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/../cpp/secp256k1 secp256k1)
 add_library(${PACKAGE_NAME} SHARED 
     src/main/cpp/cpp-adapter.cpp
     ../cpp/HybridNitroSecp256k1.cpp
-    ../cpp/keccak-tiny.c
 )
 
 # Add Nitrogen specs :)
 include(${CMAKE_SOURCE_DIR}/../nitrogen/generated/android/nitrosecp256k1+autolinking.cmake)
 
 # Set up local includes
-include_directories("src/main/cpp" "../cpp" "../cpp/secp256k1/include" "../cpp/secp256k1/src" "../cpp/libsodium_cmake/libsodium/src/libsodium/include")
+include_directories("src/main/cpp" "../cpp" "../cpp/libsolutil" "../cpp/secp256k1/include" "../cpp/secp256k1/src" "../cpp/libsodium_cmake/libsodium/src/libsodium/include")
 
 find_library(LOG_LIB log)
 

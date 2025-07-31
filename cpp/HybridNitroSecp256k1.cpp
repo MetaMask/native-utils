@@ -1,8 +1,11 @@
 #include "HybridNitroSecp256k1.hpp"
 #include "secp256k1_wrapper.h"
-#include "keccak-tiny.h"
 #include <sodium.h>
 #include <stdexcept>
+#include "libsolutil/solidity_types.h"
+
+// Include libsolutil Keccak256 implementation directly
+#include "libsolutil/Keccak256.cpp"
 
 namespace margelo::nitro::nitrosecp256k1 {
 
@@ -217,17 +220,13 @@ std::shared_ptr<ArrayBuffer> HybridNitroSecp256k1::pubToAddress(const std::share
         }
     }
     
-    // Calculate keccak-256 hash using keccak-tiny
-    // Note: sha3_256 in keccak-tiny actually implements Keccak-256 (0x01 padding)
-    // which is what Ethereum uses, not the official SHA3-256 (0x06 padding)
-    uint8_t hash[32];
-    if (sha3_256(hash, 32, pubKeyBytes, pubKeySize) != 0) {
-        throw std::runtime_error("Keccak-256 hash failed");
-    }
+    // Calculate keccak-256 hash using libsolutil
+    bytesConstRef input(pubKeyBytes, pubKeySize);
+    h256 hashResult = solidity::util::keccak256(input);
     
     // Return the last 20 bytes (Ethereum address)
     auto result = ArrayBuffer::allocate(20);
-    memcpy(result->data(), hash + 12, 20);
+    memcpy(result->data(), hashResult.data() + 12, 20);
     
     return result;
 }
@@ -243,15 +242,13 @@ std::shared_ptr<ArrayBuffer> HybridNitroSecp256k1::keccak256(const std::string& 
         dataBytes[i] = (hexCharToByte(data[i * 2]) << 4) | hexCharToByte(data[i * 2 + 1]);
     }
     
-    // Calculate keccak-256 hash
-    uint8_t hash[32];
-    if (sha3_256(hash, 32, dataBytes.data(), dataLen) != 0) {
-        throw std::runtime_error("Keccak-256 hash failed");
-    }
+    // Calculate keccak-256 hash using libsolutil
+    bytesConstRef input(dataBytes);
+    h256 hashResult = solidity::util::keccak256(input);
     
     // Return the 32-byte hash
     auto result = ArrayBuffer::allocate(32);
-    memcpy(result->data(), hash, 32);
+    memcpy(result->data(), hashResult.data(), 32);
     
     return result;
 }
@@ -261,15 +258,13 @@ std::shared_ptr<ArrayBuffer> HybridNitroSecp256k1::keccak256FromBytes(const std:
     const uint8_t* dataBytes = static_cast<const uint8_t*>(data->data());
     size_t dataLen = data->size();
     
-    // Calculate keccak-256 hash
-    uint8_t hash[32];
-    if (sha3_256(hash, 32, dataBytes, dataLen) != 0) {
-        throw std::runtime_error("Keccak-256 hash failed");
-    }
+    // Calculate keccak-256 hash using libsolutil
+    bytesConstRef input(dataBytes, dataLen);
+    h256 hashResult = solidity::util::keccak256(input);
     
     // Return the 32-byte hash
     auto result = ArrayBuffer::allocate(32);
-    memcpy(result->data(), hash, 32);
+    memcpy(result->data(), hashResult.data(), 32);
     
     return result;
 }
