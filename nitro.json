@@ -1,0 +1,16 @@
+{
+  "cxxNamespace": ["metamask_nativeutils"],
+  "ios": {
+    "iosModuleName": "NativeUtils"
+  },
+  "android": {
+    "androidNamespace": ["metamask", "nativeutils"],
+    "androidCxxLibName": "metamask_nativeutils"
+  },
+  "autolinking": {
+    "NativeUtils": {
+      "cpp": "HybridNativeUtils"
+    }
+  },
+  "ignorePaths": ["node_modules"]
+}
