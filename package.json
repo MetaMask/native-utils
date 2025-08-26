@@ -10,8 +10,7 @@
     "type": "git",
     "url": "https://github.com/MetaMask/native-utils.git"
   },
-  "license": "copyright",
-  "author": "Margelo",
+  "license": "ISC",
   "sideEffects": true,
   "exports": {
     ".": {
