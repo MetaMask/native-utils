@@ -65,6 +65,7 @@
     "@lavamoat/preinstall-always-fail": "^2.0.0",
     "@metamask/auto-changelog": "^4.0.0",
     "@react-native/eslint-config": "^0.80.2",
+    "@types/jest": "^30.0.0",
     "@types/node": "^18.18",
     "@typescript-eslint/utils": "^8.38.0",
     "@yarnpkg/types": "^4.0.0-rc.52",
