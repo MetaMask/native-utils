@@ -1,47 +1,31 @@
-import base, { createConfig } from '@metamask/eslint-config';
-import nodejs from '@metamask/eslint-config-nodejs';
-import typescript from '@metamask/eslint-config-typescript';
-import vitest from '@metamask/eslint-config-vitest';
+import { fixupConfigRules } from '@eslint/compat';
+import { FlatCompat } from '@eslint/eslintrc';
+import js from '@eslint/js';
+import prettier from 'eslint-plugin-prettier';
+import { defineConfig } from 'eslint/config';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import prettierConfig from './.prettierrc.mjs';
 
-const config = createConfig([
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+  recommendedConfig: js.configs.recommended,
+  allConfig: js.configs.all,
+});
+
+export default defineConfig([
   {
-    ignores: ['dist/', 'docs/', '.yarn/'],
-  },
-
-  {
-    extends: base,
-
-    languageOptions: {
-      sourceType: 'module',
-      parserOptions: {
-        tsconfigRootDir: import.meta.dirname,
-        project: ['./tsconfig.json'],
-      },
-    },
-
-    settings: {
-      'import-x/extensions': ['.js', '.mjs'],
-    },
-  },
-
-  {
-    files: ['**/*.ts'],
-    extends: typescript,
-  },
-
-  {
-    files: ['**/*.js', '**/*.cjs'],
-    extends: nodejs,
-
-    languageOptions: {
-      sourceType: 'script',
+    extends: fixupConfigRules(compat.extends('@react-native', 'prettier')),
+    plugins: { prettier },
+    rules: {
+      'react/react-in-jsx-scope': 'off',
+      'no-bitwise': 'off',
+      'prettier/prettier': ['error', prettierConfig],
     },
   },
-
   {
-    files: ['**/*.test.ts', '**/*.test.js'],
-    extends: [vitest, nodejs],
+    ignores: ['node_modules/', 'lib/', '.yarn/', 'eslint.config.mjs', 'cpp/'],
   },
 ]);
-
-export default config;

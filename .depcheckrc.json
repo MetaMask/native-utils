@@ -3,8 +3,9 @@
     "@lavamoat/allow-scripts",
     "@lavamoat/preinstall-always-fail",
     "@metamask/auto-changelog",
-    "@metamask/eslint-config",
     "@metamask/eslint-config-*",
+    "@metamask/eslint-config",
+    "@react-native/eslint-config",
     "@types/*",
     "@typescript-eslint/utils",
     "@vitest/coverage-istanbul",
@@ -13,10 +14,14 @@
     "eslint-config-*",
     "eslint-import-resolver-typescript",
     "eslint-plugin-*",
+    "@eslint/compat",
+    "@eslint/eslintrc",
+    "@eslint/js",
     "prettier-plugin-packagejson",
     "ts-node",
     "typedoc",
     "typescript-eslint",
+    "typescript",
     "vite"
   ]
 }

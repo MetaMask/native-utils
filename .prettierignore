@@ -1,0 +1,16 @@
+# iOS directories
+**/ios/**
+
+# Android directories  
+**/android/**
+
+# Submodules
+cpp/secp256k1/**
+
+# Build outputs
+lib/
+build/
+nitrogen/
+
+# Dependencies
+node_modules/ 
