@@ -13,9 +13,12 @@
     "start": "react-native start"
   },
   "dependencies": {
+    "@ethereumjs/util": "^10.0.0",
+    "@noble/hashes": "^1.8.0",
+    "@noble/secp256k1": "^2.3.0",
     "react": "19.0.0",
     "react-native": "0.79.2",
-    "react-native-nitro-modules": "^0.26.2"
+    "react-native-nitro-modules": "^0.26.3"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -28,7 +31,7 @@
     "@react-native/metro-config": "0.79.2",
     "@react-native/typescript-config": "0.79.2",
     "@types/react": "^19.0.0",
-    "react-native-builder-bob": "^0.40.8",
+    "react-native-builder-bob": "^0.40.12",
     "react-native-monorepo-config": "^0.1.9"
   },
   "engines": {

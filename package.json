@@ -11,6 +11,7 @@
     "url": "https://github.com/MetaMask/native-utils.git"
   },
   "license": "ISC",
+  "author": "MetaMask",
   "sideEffects": true,
   "exports": {
     ".": {
