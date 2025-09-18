@@ -85,5 +85,8 @@ android/generated
 # React Native Nitro Modules
 nitrogen/
 
+# Botan generated files
+cpp/botan_generated/
+
 # Eslint
 .eslintcache

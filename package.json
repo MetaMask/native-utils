@@ -33,6 +33,7 @@
     "nitro.json",
     "*.podspec",
     "react-native.config.js",
+    "!cpp/botan",
     "!ios/build",
     "!android/build",
     "!android/gradle",
@@ -58,8 +59,9 @@
     "!cpp/secp256k1/**/*.py"
   ],
   "scripts": {
-    "build": "yarn nitrogen && yarn bob build",
-    "example": "cd example && yarn",
+    "build": "yarn nitrogen && yarn generate:botan && yarn bob build",
+    "generate:botan": "./scripts/build-botan.sh",
+    "postinstall": "yarn generate:botan",
     "lint": "yarn lint:eslint && yarn lint:misc --check && yarn lint:dependencies --check && yarn lint:changelog",
     "lint:changelog": "auto-changelog validate --prettier",
     "lint:dependencies": "depcheck && yarn dedupe",
@@ -116,7 +118,8 @@
       "@lavamoat/preinstall-always-fail": false,
       "nitro-codegen": true,
       "react-native-nitro-modules": true,
-      "jest>@jest/core>jest-resolve>unrs-resolver": false
+      "jest>@jest/core>jest-resolve>unrs-resolver": false,
+      "$root$": false
     }
   },
   "react-native-builder-bob": {
