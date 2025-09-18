@@ -60,4 +60,4 @@ namespace secp256k1_wrapper {
 }
 #endif
 
-#endif // SECP256K1_WRAPPER_H 
+#endif // SECP256K1_WRAPPER_H

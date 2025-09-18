@@ -31,7 +31,7 @@ uint8_t hexCharToByte(char c);
  * Convert hex string to bytes with validation
  * @param hex Hex string to convert
  * @param bytes Output buffer for bytes
- * @param expectedLen Expected length in bytes
+ * @param expectedLen Expected output length in bytes
  * @throws std::runtime_error if hex string is invalid or wrong length
  */
 void hexToBytes(const std::string& hex, uint8_t* bytes, size_t expectedLen);
