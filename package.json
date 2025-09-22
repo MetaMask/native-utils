@@ -47,7 +47,6 @@
   ],
   "scripts": {
     "build": "yarn nitrogen && yarn bob build",
-    "build:docs": "typedoc",
     "example": "yarn workspace react-native-nitro-secp256k1-example",
     "lint": "yarn lint:eslint && yarn lint:misc --check && yarn lint:dependencies --check && yarn lint:changelog",
     "lint:changelog": "auto-changelog validate --prettier",
