@@ -65,7 +65,7 @@
     "@eslint/js": "^9.31.0",
     "@lavamoat/allow-scripts": "^3.0.4",
     "@lavamoat/preinstall-always-fail": "^2.0.0",
-    "@metamask/auto-changelog": "^4.0.0",
+    "@metamask/auto-changelog": "^5.1.0",
     "@react-native/eslint-config": "^0.80.2",
     "@types/jest": "^30.0.0",
     "@types/node": "^18.18",
