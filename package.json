@@ -42,12 +42,9 @@
     "!**/__mocks__",
     "!**/.*"
   ],
-  "workspaces": [
-    "example"
-  ],
   "scripts": {
     "build": "yarn nitrogen && yarn bob build",
-    "example": "yarn workspace react-native-nitro-secp256k1-example",
+    "example": "cd example && yarn",
     "lint": "yarn lint:eslint && yarn lint:misc --check && yarn lint:dependencies --check && yarn lint:changelog",
     "lint:changelog": "auto-changelog validate --prettier",
     "lint:dependencies": "depcheck && yarn dedupe",
