@@ -1,6 +1,7 @@
 #include "HybridNativeUtils.hpp"
 #include "secp256k1_wrapper.h"
 #include "hex_utils.hpp"
+#include "botan_conditional.h"
 #include <stdexcept>
 
 namespace margelo::nitro::metamask_nativeutils {
@@ -72,6 +73,45 @@ std::shared_ptr<ArrayBuffer> HybridNativeUtils::toPublicKeyFromBytes(const std::
   
   return generatePublicKeyFromBytes(seckey, isCompressed);
 }
+
+static std::shared_ptr<ArrayBuffer> keccak256Hash(const uint8_t* dataBytes, size_t dataLen) {
+  auto hasher = Botan::HashFunction::create("Keccak-1600(256)");
+  if (!hasher) {
+    throw std::runtime_error("Failed to create Keccak-256 hasher");
+  }
+
+  hasher->update(dataBytes, dataLen);
+
+  // Convert hex string to bytes
+  auto result = ArrayBuffer::allocate(32);
+  hasher->final(static_cast<uint8_t*>(result->data()));
+
+  return result;
+}
+
+std::shared_ptr<ArrayBuffer> HybridNativeUtils::keccak256(const std::string& data) {
+  validateHexString(data);
+  
+  size_t dataLen = data.length() / 2;
+  
+  auto dataBuffer = ArrayBuffer::allocate(dataLen);
+  uint8_t* dataBytes = static_cast<uint8_t*>(dataBuffer->data());
+  
+  // Convert hex string to bytes
+  for (size_t i = 0; i < dataLen; i++) {
+      dataBytes[i] = (hexCharToByte(data[i * 2]) << 4) | hexCharToByte(data[i * 2 + 1]);
+  }
+  
+  return keccak256FromBytes(dataBuffer);
+}
+std::shared_ptr<ArrayBuffer> HybridNativeUtils::keccak256FromBytes(const std::shared_ptr<ArrayBuffer>& data) {
+  // Get the data bytes
+  const uint8_t* dataBytes = static_cast<const uint8_t*>(data->data());
+  size_t dataLen = data->size();
+  
+  return keccak256Hash(dataBytes, dataLen);
+}
+
 
 double HybridNativeUtils::multiply(double a, double b) {
   return a * b;

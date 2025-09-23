@@ -8,4 +8,6 @@ export interface NativeUtils
     privateKey: ArrayBuffer,
     isCompressed: boolean,
   ): ArrayBuffer;
+  keccak256(data: string): ArrayBuffer;
+  keccak256FromBytes(data: ArrayBuffer): ArrayBuffer;
 }
