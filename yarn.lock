@@ -10190,8 +10190,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-<<<<<<< HEAD
-=======
 "universal-user-agent@npm:^6.0.0":
   version: 6.0.1
   resolution: "universal-user-agent@npm:6.0.1"
@@ -10199,14 +10197,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"universalify@npm:^0.1.0":
-  version: 0.1.2
-  resolution: "universalify@npm:0.1.2"
-  checksum: 40cdc60f6e61070fe658ca36016a8f4ec216b29bf04a55dce14e3710cc84c7448538ef4dad3728d0bfe29975ccd7bfb5f414c45e7b78883567fb31b246f02dff
-  languageName: node
-  linkType: hard
-
->>>>>>> 615fac5fa63ae03b4a66a65558fd3a3aab82fd20
 "universalify@npm:^2.0.0":
   version: 2.0.1
   resolution: "universalify@npm:2.0.1"
