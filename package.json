@@ -1,6 +1,6 @@
 {
   "name": "@metamask/native-utils",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "React Native Utils for MetaMask",
   "homepage": "https://github.com/MetaMask/native-utils",
   "bugs": {
