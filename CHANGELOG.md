@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.0]
 
-### Uncategorized
+### Fixed
 
 - fix: add main field to package.json ([#19](https://github.com/MetaMask/native-utils/pull/19))
 
