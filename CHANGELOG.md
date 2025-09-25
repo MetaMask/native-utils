@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.4.0]
 
-### Uncategorized
+### Fixed
 
 - fix: build artifacts + submodules ([#16](https://github.com/MetaMask/native-utils/pull/16))
 
