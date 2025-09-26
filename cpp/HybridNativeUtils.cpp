@@ -112,6 +112,49 @@ std::shared_ptr<ArrayBuffer> HybridNativeUtils::keccak256FromBytes(const std::sh
   return keccak256Hash(dataBytes, dataLen);
 }
 
+std::shared_ptr<ArrayBuffer> HybridNativeUtils::pubToAddress(const std::shared_ptr<ArrayBuffer>& pubKey, bool sanitize) {
+  initializeContext();
+  
+  const uint8_t* pubKeyBytes = static_cast<const uint8_t*>(pubKey->data());
+  size_t pubKeySize = pubKey->size();
+  
+  // Buffer to hold the 64-byte uncompressed public key (without 0x04 prefix)
+  uint8_t uncompressedPubKeyBytes[64];
+  
+  // Handle sanitization - convert various formats to 64-byte uncompressed
+  if (sanitize && pubKeySize != 64) {
+      secp256k1_pubkey parsedPubkey;
+      
+      // Parse SEC1-encoded public key with libsecp256k1 to ensure validity
+      if (!secp256k1_ec_pubkey_parse(g_ctx, &parsedPubkey, pubKeyBytes, pubKeySize)) {
+          throw std::runtime_error("Invalid public key format");
+      }
+      
+      // Serialize to uncompressed format (65 bytes)
+      uint8_t uncompressedKey[65];
+      size_t outputLen = 65;
+      if (!secp256k1_ec_pubkey_serialize(g_ctx, uncompressedKey, &outputLen, &parsedPubkey, SECP256K1_EC_UNCOMPRESSED)) {
+          throw std::runtime_error("Failed to serialize public key");
+      }
+      
+      // Skip the 0x04 prefix byte for keccak hashing
+      memcpy(uncompressedPubKeyBytes, uncompressedKey + 1, 64);
+      pubKeyBytes = uncompressedPubKeyBytes;
+      pubKeySize = 64;
+  } else {
+      if (pubKeySize != 64) {
+          throw std::runtime_error("Expected pubKey to be of length 64");
+      }
+  }
+  
+  auto hashResult = keccak256Hash(pubKeyBytes, pubKeySize);
+  
+  // Return the last 20 bytes (Ethereum address)
+  auto result = ArrayBuffer::allocate(20);
+  memcpy(result->data(), static_cast<const uint8_t*>(hashResult->data()) + 12, 20);
+  
+  return result;
+}
 
 double HybridNativeUtils::multiply(double a, double b) {
   return a * b;

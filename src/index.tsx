@@ -100,3 +100,21 @@ export function keccak256(
   // Convert result from ArrayBuffer to Uint8Array to match common crypto library APIs
   return arrayBufferToUint8Array(result);
 }
+
+/**
+ * Returns the ethereum address of a given public key using native C++ implementation.
+ * Accepts "Ethereum public keys" and SEC1 encoded keys.
+ * @param pubKey The two points of an uncompressed key, unless sanitize is enabled
+ * @param sanitize Accept public keys in other formats
+ * @returns Uint8Array containing the 20-byte Ethereum address
+ */
+export function pubToAddress(
+  pubKey: Uint8Array,
+  sanitize: boolean = false,
+): Uint8Array {
+  const pubKeyBuffer = uint8ArrayToArrayBuffer(pubKey);
+
+  const result = NativeUtilsHybridObject.pubToAddress(pubKeyBuffer, sanitize);
+
+  return arrayBufferToUint8Array(result);
+}

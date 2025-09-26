@@ -10,4 +10,5 @@ export interface NativeUtils
   ): ArrayBuffer;
   keccak256(data: string): ArrayBuffer;
   keccak256FromBytes(data: ArrayBuffer): ArrayBuffer;
+  pubToAddress(pubKey: ArrayBuffer, sanitize: boolean): ArrayBuffer;
 }
