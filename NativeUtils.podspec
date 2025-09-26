@@ -20,6 +20,7 @@ Pod::Spec.new do |s|
     "cpp/*.{hpp,cpp}",
     "cpp/*.{h,c}",
     "cpp/secp256k1/src/*.{h,c}",
+    "cpp/botan_conditional.cpp",  # Botan conditional compilation
   ]
 
   s.exclude_files = [
@@ -35,21 +36,25 @@ Pod::Spec.new do |s|
     "cpp/secp256k1/src/selftest.h",
     "cpp/secp256k1/src/**/tests_impl.h",
     "cpp/secp256k1/src/**/bench_impl.h",
+    # Exclude Botan submodule (we use generated amalgamation files)
+    "cpp/botan/**/*",
   ]
 
   s.public_header_files = [
     "cpp/secp256k1/include/secp256k1.h",
+    "cpp/botan_conditional.h",  # Botan conditional header
   ]
 
   s.header_dir = "secp256k1"
   s.header_mappings_dir = "cpp/secp256k1/include"
 
   s.pod_target_xcconfig = {
-    # C++ compiler flags, mainly for folly.
+    # C++ compiler flags, mainly for folly and Botan
     "GCC_PREPROCESSOR_DEFINITIONS" => "$(inherited) FOLLY_NO_CONFIG FOLLY_CFG_NO_COROUTINES USE_ECMULT_STATIC_PRECOMPUTATION USE_FIELD_10X26 USE_SCALAR_8X32 ECMULT_WINDOW_SIZE=15 ECMULT_GEN_PREC_BITS=4",
-    "HEADER_SEARCH_PATHS" => "$(inherited) $(PODS_TARGET_SRCROOT)/cpp/secp256k1 $(PODS_TARGET_SRCROOT)/cpp/secp256k1/include $(PODS_TARGET_SRCROOT)/cpp/secp256k1/src",
+    "HEADER_SEARCH_PATHS" => "$(inherited) $(PODS_TARGET_SRCROOT)/cpp $(PODS_TARGET_SRCROOT)/cpp/botan_generated $(PODS_TARGET_SRCROOT)/cpp/secp256k1 $(PODS_TARGET_SRCROOT)/cpp/secp256k1/include $(PODS_TARGET_SRCROOT)/cpp/secp256k1/src",
     "OTHER_CFLAGS" => "$(inherited) -DUSE_ECMULT_STATIC_PRECOMPUTATION -DUSE_FIELD_10X26 -DUSE_SCALAR_8X32 -DECMULT_WINDOW_SIZE=15 -DECMULT_GEN_PREC_BITS=4",
-    "CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES" => "YES"
+    "CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES" => "YES",
+    "GCC_SYMBOLS_PRIVATE_EXTERN" => "YES"  # Hide symbols for clean API
   }
 
   s.dependency 'React-jsi'
