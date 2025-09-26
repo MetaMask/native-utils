@@ -56,7 +56,8 @@
     "!cpp/secp256k1/**/*.md",
     "!cpp/secp256k1/**/*.json",
     "!cpp/secp256k1/**/*.sh",
-    "!cpp/secp256k1/**/*.py"
+    "!cpp/secp256k1/**/*.py",
+    "!cpp/botan/**/*"
   ],
   "scripts": {
     "build": "yarn nitrogen && yarn generate:botan && yarn bob build",
