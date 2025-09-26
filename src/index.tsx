@@ -118,3 +118,19 @@ export function pubToAddress(
 
   return arrayBufferToUint8Array(result);
 }
+
+/**
+ * Compute HMAC-SHA512 using native implementation for better performance.
+ *
+ * @param key - The HMAC key as Uint8Array
+ * @param data - The data to authenticate as Uint8Array
+ * @returns Uint8Array containing the 64-byte HMAC-SHA512 result
+ */
+export function hmacSha512(key: Uint8Array, data: Uint8Array): Uint8Array {
+  const keyBuffer = uint8ArrayToArrayBuffer(key);
+  const dataBuffer = uint8ArrayToArrayBuffer(data);
+
+  const result = NativeUtilsHybridObject.hmacSha512(keyBuffer, dataBuffer);
+
+  return arrayBufferToUint8Array(result);
+}

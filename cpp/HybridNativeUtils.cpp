@@ -156,6 +156,24 @@ std::shared_ptr<ArrayBuffer> HybridNativeUtils::pubToAddress(const std::shared_p
   return result;
 }
 
+std::shared_ptr<ArrayBuffer> HybridNativeUtils::hmacSha512(const std::shared_ptr<ArrayBuffer>& key, const std::shared_ptr<ArrayBuffer>& data) {
+  // Get key and data pointers
+  const uint8_t* keyBytes = static_cast<const uint8_t*>(key->data());
+  const uint8_t* dataBytes = static_cast<const uint8_t*>(data->data());
+
+  const auto keyLen = key->size();
+
+  auto mac = Botan::MessageAuthenticationCode::create_or_throw("HMAC(SHA-512)");
+
+  mac->set_key(keyBytes, keyLen);
+  mac->update(dataBytes, data->size());
+
+  auto buffer = ArrayBuffer::allocate(mac->output_length());
+  mac->final(static_cast<uint8_t*>(buffer->data()));
+
+  return buffer;
+}
+
 double HybridNativeUtils::multiply(double a, double b) {
   return a * b;
 }
