@@ -93,13 +93,13 @@
     "react": "19.0.0",
     "react-native": "0.79.2",
     "react-native-builder-bob": "^0.40.12",
-    "react-native-nitro-modules": "^0.26.3",
+    "react-native-nitro-modules": "^0.29.4",
     "typescript": "^5.8.3"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-native-nitro-modules": "^0.26.3"
+    "react-native-nitro-modules": "^0.29.4"
   },
   "packageManager": "yarn@3.6.1",
   "publishConfig": {
@@ -116,7 +116,8 @@
       "@lavamoat/preinstall-always-fail": false,
       "nitro-codegen": true,
       "react-native-nitro-modules": true,
-      "jest>@jest/core>jest-resolve>unrs-resolver": false
+      "jest>@jest/core>jest-resolve>unrs-resolver": false,
+      "nitro-codegen>react-native-nitro-modules": false
     }
   },
   "react-native-builder-bob": {
