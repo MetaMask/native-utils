@@ -8,4 +8,8 @@ export interface NativeUtils
     privateKey: ArrayBuffer,
     isCompressed: boolean,
   ): ArrayBuffer;
+  keccak256(data: string): ArrayBuffer;
+  keccak256FromBytes(data: ArrayBuffer): ArrayBuffer;
+  pubToAddress(pubKey: ArrayBuffer, sanitize: boolean): ArrayBuffer;
+  hmacSha512(key: ArrayBuffer, data: ArrayBuffer): ArrayBuffer;
 }
