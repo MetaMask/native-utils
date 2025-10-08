@@ -27,13 +27,14 @@ add_library(${PACKAGE_NAME} SHARED
     src/main/cpp/cpp-adapter.cpp
     ../cpp/HybridNativeUtils.cpp
     ../cpp/hex_utils.cpp
+    ../cpp/botan_conditional.cpp
 )
 
 # Add Nitrogen specs :)
 include(${CMAKE_SOURCE_DIR}/../nitrogen/generated/android/metamask_nativeutils+autolinking.cmake)
 
 # Set up local includes
-include_directories("src/main/cpp" "../cpp" "../cpp/secp256k1/include" "../cpp/secp256k1/src")
+include_directories("src/main/cpp" "../cpp" "../cpp/botan_generated" "../cpp/secp256k1/include" "../cpp/secp256k1/src")
 
 find_library(LOG_LIB log)
 
@@ -43,4 +44,10 @@ target_link_libraries(
         secp256k1
         ${LOG_LIB}
         android # <-- Android core
+)
+
+# Hide symbols for clean API and better performance
+set_target_properties(${PACKAGE_NAME} PROPERTIES
+    CXX_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN ON
 )
