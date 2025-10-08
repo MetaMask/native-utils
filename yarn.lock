@@ -2172,12 +2172,12 @@ __metadata:
     react: 19.0.0
     react-native: 0.79.2
     react-native-builder-bob: ^0.40.12
-    react-native-nitro-modules: ^0.26.3
+    react-native-nitro-modules: ^0.29.4
     typescript: ^5.8.3
   peerDependencies:
     react: "*"
     react-native: "*"
-    react-native-nitro-modules: ^0.26.3
+    react-native-nitro-modules: ^0.29.4
   languageName: unknown
   linkType: soft
 
@@ -8802,13 +8802,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-nitro-modules@npm:^0.26.3, react-native-nitro-modules@npm:^0.26.4":
+"react-native-nitro-modules@npm:^0.26.4":
   version: 0.26.4
   resolution: "react-native-nitro-modules@npm:0.26.4"
   peerDependencies:
     react: "*"
     react-native: "*"
   checksum: 1851f7c19c8af6c7ceaac97d2c8f105826a167ca29e1189525bcb4c4c52902ba72fc51b52a3d4ff0dd1beb4cf74405435b1badac7552a71ef8fbb235503274ba
+  languageName: node
+  linkType: hard
+
+"react-native-nitro-modules@npm:^0.29.4":
+  version: 0.29.6
+  resolution: "react-native-nitro-modules@npm:0.29.6"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 3a11d79aca124fb03462b90a6b75056d423fcbcc51312e62196143e71c259c7cb56692bca35b5d22c8a7d7dbb769843698c3b1e0727f58a1daf90114351368b1
   languageName: node
   linkType: hard
 
