@@ -20,6 +20,8 @@ jobs:
         with:
           is-high-risk-environment: true
           ref: ${{ github.sha }}
+      - name: Pull submodules
+        run: git submodule update --init --recursive --depth 1
       - uses: MetaMask/action-publish-release@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -31,8 +33,10 @@ jobs:
           retention-days: 4
           include-hidden-files: true
           path: |
-            ./dist
+            ./lib
+            ./nitrogen
             ./node_modules/.yarn-state.yml
+            ./cpp/botan_generated
 
   publish-npm-dry-run:
     needs: publish-release
@@ -43,6 +47,8 @@ jobs:
         with:
           is-high-risk-environment: true
           ref: ${{ github.sha }}
+      - name: Pull submodules
+        run: git submodule update --init --recursive --depth 1
       - name: Restore build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -66,6 +72,8 @@ jobs:
         with:
           is-high-risk-environment: true
           ref: ${{ github.sha }}
+      - name: Pull submodules
+        run: git submodule update --init --recursive --depth 1
       - name: Restore build artifacts
         uses: actions/download-artifact@v4
         with:

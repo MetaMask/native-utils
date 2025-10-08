@@ -1,6 +1,6 @@
 {
   "name": "@metamask/native-utils",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "description": "React Native Utils for MetaMask",
   "homepage": "https://github.com/MetaMask/native-utils",
   "bugs": {
@@ -21,6 +21,8 @@
     },
     "./package.json": "./package.json"
   },
+  "main": "./lib/module/index.js",
+  "types": "./lib/typescript/src/index.d.ts",
   "files": [
     "src",
     "lib",
@@ -38,13 +40,24 @@
     "!android/gradlew",
     "!android/gradlew.bat",
     "!android/local.properties",
+    "!android/.cxx",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__",
-    "!**/.*"
-  ],
-  "workspaces": [
-    "example"
+    "!scripts",
+    "!.github",
+    "!.yarn",
+    "!example",
+    "!cpp/secp256k1/**/*_test.*",
+    "!cpp/secp256k1/sage",
+    "!cpp/secp256k1/tools",
+    "!cpp/secp256k1/examples",
+    "!cpp/secp256k1/doc",
+    "!cpp/secp256k1/**/*.md",
+    "!cpp/secp256k1/**/*.json",
+    "!cpp/secp256k1/**/*.sh",
+    "!cpp/secp256k1/**/*.py",
+    "!cpp/botan/**/*"
   ],
   "scripts": {
     "build": "yarn nitrogen && yarn generate:botan && yarn bob build",
@@ -84,13 +97,13 @@
     "react": "19.0.0",
     "react-native": "0.79.2",
     "react-native-builder-bob": "^0.40.12",
-    "react-native-nitro-modules": "^0.26.3",
+    "react-native-nitro-modules": "^0.29.4",
     "typescript": "^5.8.3"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-native-nitro-modules": "^0.26.3"
+    "react-native-nitro-modules": "^0.29.4"
   },
   "packageManager": "yarn@3.6.1",
   "publishConfig": {
@@ -109,6 +122,7 @@
       "react-native-nitro-modules": true,
       "jest>@jest/core>jest-resolve>unrs-resolver": false,
       "$root$": false
+      "nitro-codegen>react-native-nitro-modules": false
     }
   },
   "react-native-builder-bob": {

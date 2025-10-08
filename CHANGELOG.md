@@ -7,8 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0]
+
+### Fixed
+
+- fix: add main field to package.json ([#19](https://github.com/MetaMask/native-utils/pull/19))
+
+## [0.4.0]
+
+### Fixed
+
+- fix: build artifacts + submodules ([#16](https://github.com/MetaMask/native-utils/pull/16))
+
+## [0.3.0]
+
 ### Added
 
-- Initial release
+- fix: missing files in package ([#14](https://github.com/MetaMask/native-utils/pull/14))
 
-[Unreleased]: https://github.com/MetaMask/native-utils/
+## [0.2.0]
+
+### Added
+
+- feat: add native public key generation ([#5](https://github.com/MetaMask/native-utils/pull/5))
+- feat: add Example app with tests cases ([#6](https://github.com/MetaMask/native-utils/pull/6))
+
+[Unreleased]: https://github.com/MetaMask/native-utils/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/MetaMask/native-utils/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/MetaMask/native-utils/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/MetaMask/native-utils/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/MetaMask/native-utils/releases/tag/v0.2.0
