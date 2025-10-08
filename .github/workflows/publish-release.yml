@@ -36,6 +36,7 @@ jobs:
             ./lib
             ./nitrogen
             ./node_modules/.yarn-state.yml
+            ./cpp/botan_generated
 
   publish-npm-dry-run:
     needs: publish-release
