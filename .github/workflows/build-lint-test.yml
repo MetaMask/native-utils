@@ -32,7 +32,7 @@ jobs:
           is-high-risk-environment: false
           node-version: ${{ matrix.node-version }}
       - name: Initialize submodules
-        run: git submodule update --init --recursive
+        run: git submodule update --init --recursive --depth 1
       - run: yarn build
       - name: Require clean working directory
         shell: bash
@@ -56,7 +56,7 @@ jobs:
           is-high-risk-environment: false
           node-version: ${{ matrix.node-version }}
       - name: Initialize submodules
-        run: git submodule update --init --recursive
+        run: git submodule update --init --recursive --depth 1
       - name: Verify submodule commits
         run: ./scripts/verify-submodules.sh
       - run: yarn lint
@@ -88,7 +88,7 @@ jobs:
           is-high-risk-environment: false
           node-version: ${{ matrix.node-version }}
       - name: Initialize submodules
-        run: git submodule update --init --recursive
+        run: git submodule update --init --recursive --depth 1
       - run: yarn test
       - name: Require clean working directory
         shell: bash
@@ -112,7 +112,7 @@ jobs:
           is-high-risk-environment: false
           node-version: ${{ matrix.node-version }}
       - name: Initialize submodules
-        run: git submodule update --init --recursive
+        run: git submodule update --init --recursive --depth 1
       - name: Install dependencies via Yarn
         run: rm yarn.lock && YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn
       - run: yarn test
