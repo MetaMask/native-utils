@@ -22,7 +22,7 @@ mkdir -p "$BOTAN_GENERATED_DIR"
 
 # Configuration variables
 BOTAN_MODULES="keccak,hmac,sha2_64"
-COMMON_FLAGS="--amalgamation --minimized-build"
+COMMON_FLAGS="--amalgamation --minimized-build --disable-cc-tests"
 
 echo "📦 Using modules: $BOTAN_MODULES"
 
