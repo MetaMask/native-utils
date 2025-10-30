@@ -119,6 +119,7 @@
       "nitro-codegen": true,
       "react-native-nitro-modules": true,
       "jest>@jest/core>jest-resolve>unrs-resolver": false,
+      "$root$": false,
       "nitro-codegen>react-native-nitro-modules": false
     }
   },

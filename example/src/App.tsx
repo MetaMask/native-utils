@@ -139,7 +139,7 @@ export default function App() {
     },
 
     {
-      name: 'Public Key to Address Conversion',
+      name: 'pubToAddress - Address Conversion',
       key: 'pubToAddress',
       runner: () => runAllPubToAddressTests(),
     },
