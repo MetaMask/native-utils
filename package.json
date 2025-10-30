@@ -1,7 +1,7 @@
 {
   "name": "@metamask/native-utils",
   "version": "0.6.0",
-  "description": "React Native Utils for MetaMask",
+  "description": "React Native Utils for MetaMask. This project is under development and that individuals should use it at their own risk.",
   "homepage": "https://github.com/MetaMask/native-utils",
   "bugs": {
     "url": "https://github.com/MetaMask/native-utils/issues"
