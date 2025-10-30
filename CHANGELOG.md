@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0]
+
+### Uncategorized
+
+- Feat: keccak256, pubToAddress, hmacSha512 ([#11](https://github.com/MetaMask/native-utils/pull/11))
+- feat: add Botan C++ library for crypto operations ([#7](https://github.com/MetaMask/native-utils/pull/7))
+- chore: update nitro to latest version ([#21](https://github.com/MetaMask/native-utils/pull/21))
+- chore: disable build of exhaustive tests ([#18](https://github.com/MetaMask/native-utils/pull/18))
+
 ## [0.5.0]
 
 ### Fixed
@@ -32,7 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - feat: add native public key generation ([#5](https://github.com/MetaMask/native-utils/pull/5))
 - feat: add Example app with tests cases ([#6](https://github.com/MetaMask/native-utils/pull/6))
 
-[Unreleased]: https://github.com/MetaMask/native-utils/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/MetaMask/native-utils/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/MetaMask/native-utils/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/MetaMask/native-utils/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/MetaMask/native-utils/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/MetaMask/native-utils/compare/v0.2.0...v0.3.0
