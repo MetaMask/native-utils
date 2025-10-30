@@ -9,10 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.6.0]
 
-### Uncategorized
+### Added
 
 - Feat: keccak256, pubToAddress, hmacSha512 ([#11](https://github.com/MetaMask/native-utils/pull/11))
 - feat: add Botan C++ library for crypto operations ([#7](https://github.com/MetaMask/native-utils/pull/7))
+
+### Changed
+
 - chore: update nitro to latest version ([#21](https://github.com/MetaMask/native-utils/pull/21))
 - chore: disable build of exhaustive tests ([#18](https://github.com/MetaMask/native-utils/pull/18))
 
