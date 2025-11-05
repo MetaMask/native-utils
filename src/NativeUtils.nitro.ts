@@ -8,6 +8,8 @@ export interface NativeUtils
     privateKey: ArrayBuffer,
     isCompressed: boolean,
   ): ArrayBuffer;
+  getPublicKeyEd25519(privateKey: string): ArrayBuffer;
+  getPublicKeyEd25519FromBytes(privateKey: ArrayBuffer): ArrayBuffer;
   keccak256(data: string): ArrayBuffer;
   keccak256FromBytes(data: ArrayBuffer): ArrayBuffer;
   pubToAddress(pubKey: ArrayBuffer, sanitize: boolean): ArrayBuffer;
