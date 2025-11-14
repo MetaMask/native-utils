@@ -4,8 +4,8 @@
 # Android directories  
 **/android/**
 
-# Submodules
-cpp/secp256k1/**
+# C++ code
+cpp/**
 
 # Build outputs
 lib/

@@ -1,7 +1,7 @@
 {
   "name": "@metamask/native-utils",
-  "version": "0.5.0",
-  "description": "React Native Utils for MetaMask",
+  "version": "0.6.0",
+  "description": "React Native Utils for MetaMask. This project is under development and that individuals should use it at their own risk.",
   "homepage": "https://github.com/MetaMask/native-utils",
   "bugs": {
     "url": "https://github.com/MetaMask/native-utils/issues"
@@ -61,9 +61,7 @@
   ],
   "scripts": {
     "build": "yarn nitrogen && yarn generate:botan && yarn bob build",
-    "example": "yarn workspace react-native-nitro-secp256k1-example",
     "generate:botan": "./scripts/build-botan.sh",
-    "postinstall": "yarn generate:botan",
     "lint": "yarn lint:eslint && yarn lint:misc --check && yarn lint:dependencies --check && yarn lint:changelog",
     "lint:changelog": "auto-changelog validate --prettier",
     "lint:dependencies": "depcheck && yarn dedupe",
@@ -121,7 +119,7 @@
       "nitro-codegen": true,
       "react-native-nitro-modules": true,
       "jest>@jest/core>jest-resolve>unrs-resolver": false,
-      "$root$": false
+      "$root$": false,
       "nitro-codegen>react-native-nitro-modules": false
     }
   },
