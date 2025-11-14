@@ -134,3 +134,42 @@ export function hmacSha512(key: Uint8Array, data: Uint8Array): Uint8Array {
 
   return arrayBufferToUint8Array(result);
 }
+
+/**
+ * Generate an Ed25519 public key from a private key using native implementation.
+ * This is a fast native implementation that matches the noble/curves ed25519 API.
+ *
+ * @param privateKey - The 32-byte Ed25519 private key as Uint8Array or hex string
+ * @param _compressed - Ignored parameter for API compatibility (Ed25519 keys have no compressed form)
+ * @returns Uint8Array containing 32-byte Ed25519 public key
+ */
+export function getPublicKeyEd25519(
+  privateKey: Uint8Array | string,
+  _compressed?: boolean,
+): Uint8Array {
+  let result: ArrayBuffer;
+
+  if (typeof privateKey === 'string') {
+    // 64 characters = 32 bytes
+    if (privateKey.length !== 64) {
+      throw new Error(
+        'Ed25519 private key must be 32 bytes (64 hex characters)',
+      );
+    }
+
+    result = NativeUtilsHybridObject.getPublicKeyEd25519(privateKey);
+  } else if (privateKey instanceof Uint8Array) {
+    if (privateKey.length !== 32) {
+      throw new Error('Ed25519 private key must be 32 bytes');
+    }
+
+    const privateKeyBuffer = uint8ArrayToArrayBuffer(privateKey);
+
+    result =
+      NativeUtilsHybridObject.getPublicKeyEd25519FromBytes(privateKeyBuffer);
+  } else {
+    throw new Error('Ed25519 private key must be a hex string or Uint8Array');
+  }
+
+  return arrayBufferToUint8Array(result);
+}

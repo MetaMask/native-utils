@@ -74,6 +74,30 @@ std::shared_ptr<ArrayBuffer> HybridNativeUtils::toPublicKeyFromBytes(const std::
   return generatePublicKeyFromBytes(seckey, isCompressed);
 }
 
+// Common function to generate ed25519 public key from private key bytes (seed)
+static std::shared_ptr<ArrayBuffer> generateEd25519PublicKeyFromBytes(const uint8_t* privateKeyBytes) {
+  auto buffer = ArrayBuffer::allocate(32);
+  uint8_t* publicKey = static_cast<uint8_t*>(buffer->data());
+  uint8_t secretKey[64];
+  
+  Botan::ed25519_gen_keypair(publicKey, secretKey, privateKeyBytes);
+  
+  return buffer;
+}
+
+std::shared_ptr<ArrayBuffer> HybridNativeUtils::getPublicKeyEd25519(const std::string& privateKey) {
+  uint8_t seed[32];
+  hexToBytes(privateKey, seed, 32);
+  
+  return generateEd25519PublicKeyFromBytes(seed);
+}
+
+std::shared_ptr<ArrayBuffer> HybridNativeUtils::getPublicKeyEd25519FromBytes(const std::shared_ptr<ArrayBuffer>& privateKey) {
+  const uint8_t* seed = static_cast<const uint8_t*>(privateKey->data());
+  
+  return generateEd25519PublicKeyFromBytes(seed);
+}
+
 static std::shared_ptr<ArrayBuffer> keccak256Hash(const uint8_t* dataBytes, size_t dataLen) {
   auto hasher = Botan::HashFunction::create("Keccak-1600(256)");
   if (!hasher) {
