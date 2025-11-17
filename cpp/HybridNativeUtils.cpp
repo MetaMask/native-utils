@@ -1,15 +1,14 @@
 #include "HybridNativeUtils.hpp"
-#include "secp256k1_wrapper.h"
+#include "secp256k1/include/secp256k1.h"
 #include "hex_utils.hpp"
 #include "botan_conditional.h"
 #include <stdexcept>
 
 namespace margelo::nitro::metamask_nativeutils {
 
-// Static global context for maximum performance
+// Static global context for maximum performance - all code here is called on JS thread only
 static secp256k1_context* g_ctx = nullptr;
 
-// Initialize context once (thread-safe)
 static void initializeContext() {
     if (!g_ctx) {
         g_ctx = secp256k1_context_create(SECP256K1_CONTEXT_NONE);
