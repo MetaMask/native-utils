@@ -1,7 +1,7 @@
 import { NitroModules } from 'react-native-nitro-modules';
 import type { NativeUtils } from './NativeUtils.nitro';
 import {
-  bigintToBytes,
+  bigintPrivateKeyToBytes,
   uint8ArrayToArrayBuffer,
   arrayBufferToUint8Array,
   numberArrayToUint8Array,
@@ -14,12 +14,12 @@ export function multiply(a: number, b: number): number {
   return NativeUtilsHybridObject.multiply(a, b);
 }
 
-/** Uint8Array alias for compatibility */
-export type Bytes = Uint8Array;
-/** Hex-encoded string or Uint8Array. */
-export type Hex = Bytes | string;
-/** Private key can be hex string, Uint8Array, or bigint. */
-export type PrivKey = Hex | bigint;
+/** Uint8Array of private key bytes. */
+export type BytesPrivateKey = Uint8Array;
+/** Hex-encoded string of private key. */
+export type HexPrivateKey = string;
+/** Private key can be hex string, bytes, or bigint. */
+export type PrivateKey = HexPrivateKey | BytesPrivateKey | bigint;
 
 /**
  * Generate a public key from a private key using the secp256k1 elliptic curve.
@@ -30,7 +30,7 @@ export type PrivKey = Hex | bigint;
  * @returns Uint8Array containing the public key bytes
  */
 export function getPublicKey(
-  privateKey: PrivKey,
+  privateKey: PrivateKey,
   isCompressed: boolean = true,
 ): Uint8Array {
   let result: ArrayBuffer;
@@ -40,7 +40,7 @@ export function getPublicKey(
     result = NativeUtilsHybridObject.toPublicKey(privateKey, isCompressed);
   } else if (typeof privateKey === 'bigint') {
     // Convert bigint to bytes (basic validation here, detailed validation in C++)
-    const privateKeyBytes = bigintToBytes(privateKey);
+    const privateKeyBytes = bigintPrivateKeyToBytes(privateKey);
     const privateKeyBuffer = uint8ArrayToArrayBuffer(privateKeyBytes);
     result = NativeUtilsHybridObject.toPublicKeyFromBytes(
       privateKeyBuffer,
@@ -144,7 +144,7 @@ export function hmacSha512(key: Uint8Array, data: Uint8Array): Uint8Array {
  * @returns Uint8Array containing 32-byte Ed25519 public key
  */
 export function getPublicKeyEd25519(
-  privateKey: Uint8Array | string,
+  privateKey: BytesPrivateKey | HexPrivateKey,
   _compressed?: boolean,
 ): Uint8Array {
   let result: ArrayBuffer;

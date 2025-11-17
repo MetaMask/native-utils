@@ -5,7 +5,7 @@ export const N =
 /**
  * Convert bigint to 32-byte Uint8Array (big-endian)
  */
-export function bigintToBytes(num: bigint): Uint8Array {
+export function bigintPrivateKeyToBytes(num: bigint): Uint8Array {
   if (num < 0n) {
     throw new Error('Private key must be positive');
   }
@@ -46,5 +46,16 @@ export function arrayBufferToUint8Array(buffer: ArrayBuffer): Uint8Array {
  * Convert number array to Uint8Array
  */
 export function numberArrayToUint8Array(arr: number[]): Uint8Array {
+  // Dev-only validation to catch silent conversions
+  if (process.env.NODE_ENV !== 'production') {
+    for (let i = 0; i < arr.length; i++) {
+      const val = arr[i];
+      if (val === undefined || !Number.isInteger(val) || val < 0 || val > 255) {
+        throw new Error(
+          `Invalid byte value at index ${i}: expected integer 0-255, got ${val}`,
+        );
+      }
+    }
+  }
   return new Uint8Array(arr);
 }
