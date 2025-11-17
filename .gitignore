@@ -90,3 +90,5 @@ cpp/botan_generated/
 
 # Eslint
 .eslintcache
+
+noble-curves-example/
