@@ -23,13 +23,13 @@ static std::shared_ptr<ArrayBuffer> generatePublicKeyFromBytes(const uint8_t* pr
   
   // Use secp256k1's built-in validation (checks if key is not 0 and < curve order)
   if (!secp256k1_ec_seckey_verify(g_ctx, privateKeyBytes)) {
-      throw std::runtime_error("private key invalid 3");
+      throw std::runtime_error("Private key is invalid");
   }
   
   // Create public key from private key
   secp256k1_pubkey pubkey;
   if (!secp256k1_ec_pubkey_create(g_ctx, &pubkey, privateKeyBytes)) {
-      throw std::runtime_error("private key invalid 3");
+      throw std::runtime_error("Failed to create public key from private key");
   }
   
   // Serialize the public key
@@ -41,7 +41,7 @@ static std::shared_ptr<ArrayBuffer> generatePublicKeyFromBytes(const uint8_t* pr
   unsigned int flags = isCompressed ? SECP256K1_EC_COMPRESSED : SECP256K1_EC_UNCOMPRESSED;
   
   if (!secp256k1_ec_pubkey_serialize(g_ctx, data, &outputLen, &pubkey, flags)) {
-      throw std::runtime_error("private key invalid 3");
+      throw std::runtime_error("Failed to serialize public key");
   }
   
   return buffer;
@@ -52,7 +52,7 @@ std::shared_ptr<ArrayBuffer> HybridNativeUtils::toPublicKey(const std::string& p
   
   // Must be exactly 64 characters (32 bytes)
   if (hex.length() != 64) {
-      throw std::runtime_error("Uint8Array expected");
+      throw std::runtime_error("Private key must be 64 hex characters (32 bytes)");
   }
   
   // Convert hex to bytes with validation
@@ -65,7 +65,7 @@ std::shared_ptr<ArrayBuffer> HybridNativeUtils::toPublicKey(const std::string& p
 std::shared_ptr<ArrayBuffer> HybridNativeUtils::toPublicKeyFromBytes(const std::shared_ptr<ArrayBuffer>& privateKey, bool isCompressed) {
   // Validate input size (must be exactly 32 bytes for secp256k1)
   if (privateKey->size() != 32) {
-      throw std::runtime_error("Uint8Array expected");
+      throw std::runtime_error("Private key must be 32 bytes");
   }
   
   // Get the private key bytes directly
@@ -171,7 +171,7 @@ std::shared_ptr<ArrayBuffer> HybridNativeUtils::pubToAddress(const std::shared_p
       }
   }
   
-  auto hashResult = keccak256Hash(pubKeyBytes, pubKeySize);
+  auto hashResult = keccak256Hash(pubKeyBytes, 64);
   
   // Return the last 20 bytes (Ethereum address)
   auto result = ArrayBuffer::allocate(20);
