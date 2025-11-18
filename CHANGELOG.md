@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.7.0]
 
-### Uncategorized
+### Added
 
 - feat: getPublicKeyEd25519 ([#26](https://github.com/MetaMask/native-utils/pull/26))
 
