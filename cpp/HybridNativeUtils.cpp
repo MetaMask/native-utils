@@ -22,6 +22,24 @@ static void initializeContext() {
     }
 }
 
+// Helper that wraps secp256k1_ec_pubkey_serialize and enforces the expected output length.
+// libsecp256k1 treats the length parameter as an in/out value: on input it is the buffer
+// capacity, on output it is the actual number of bytes written. We defensively verify that
+// the actual length matches the format we requested (33 or 65 bytes) so that future changes
+// in libsecp256k1 cannot cause us to read uninitialized or truncated public key data.
+static void serializeSecp256k1PubkeyChecked(
+    const secp256k1_pubkey* pubkey,
+    uint8_t* output,
+    size_t expectedLen,
+    unsigned int flags) {
+  size_t outputLen = expectedLen;
+  if (!secp256k1_ec_pubkey_serialize(g_ctx, output, &outputLen, pubkey, flags)) {
+    throw std::runtime_error("Failed to serialize public key");
+  }
+  if (outputLen != expectedLen) {
+    throw std::runtime_error("Unexpected public key length from secp256k1");
+  }
+}
 
 // Common function to generate public key from raw private key bytes
 static std::shared_ptr<ArrayBuffer> generatePublicKeyFromBytes(const uint8_t* privateKeyBytes, bool isCompressed) {
@@ -42,13 +60,10 @@ static std::shared_ptr<ArrayBuffer> generatePublicKeyFromBytes(const uint8_t* pr
   size_t keySize = isCompressed ? 33 : 65;
   auto buffer = ArrayBuffer::allocate(keySize);
   auto data = static_cast<uint8_t*>(buffer->data());
-  
-  size_t outputLen = keySize;
+
   unsigned int flags = isCompressed ? SECP256K1_EC_COMPRESSED : SECP256K1_EC_UNCOMPRESSED;
-  
-  if (!secp256k1_ec_pubkey_serialize(g_ctx, data, &outputLen, &pubkey, flags)) {
-      throw std::runtime_error("Failed to serialize public key");
-  }
+
+  serializeSecp256k1PubkeyChecked(&pubkey, data, keySize, flags);
   
   return buffer;
 }
@@ -159,10 +174,11 @@ std::shared_ptr<ArrayBuffer> HybridNativeUtils::pubToAddress(const std::shared_p
       
       // Serialize to uncompressed format (65 bytes)
       uint8_t uncompressedKey[65];
-      size_t outputLen = 65;
-      if (!secp256k1_ec_pubkey_serialize(g_ctx, uncompressedKey, &outputLen, &parsedPubkey, SECP256K1_EC_UNCOMPRESSED)) {
-          throw std::runtime_error("Failed to serialize public key");
-      }
+      serializeSecp256k1PubkeyChecked(
+          &parsedPubkey,
+          uncompressedKey,
+          65,
+          SECP256K1_EC_UNCOMPRESSED);
       
       // Skip the 0x04 prefix byte for keccak hashing
       memcpy(uncompressedPubKeyBytes, uncompressedKey + 1, 64);
