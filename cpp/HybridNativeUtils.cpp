@@ -3,15 +3,22 @@
 #include "hex_utils.hpp"
 #include "botan_conditional.h"
 #include <stdexcept>
+#include <mutex>
 
 namespace margelo::nitro::metamask_nativeutils {
 
-// Static global context for maximum performance - all code here is called on JS thread only
-static secp256k1_context* g_ctx = nullptr;
+// Static global context for maximum performance.
+// Made const and initialized with a call-once guard for thread safety.
+static std::once_flag g_ctx_once;
+static const secp256k1_context* g_ctx = nullptr;
 
 static void initializeContext() {
-    if (!g_ctx) {
+    std::call_once(g_ctx_once, []() {
         g_ctx = secp256k1_context_create(SECP256K1_CONTEXT_NONE);
+    });
+
+    if (!g_ctx) {
+        throw std::runtime_error("Failed to initialize secp256k1 context");
     }
 }
 
