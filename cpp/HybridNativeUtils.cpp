@@ -69,7 +69,7 @@ static std::shared_ptr<ArrayBuffer> generatePublicKeyFromBytes(const uint8_t* pr
 }
 
 std::shared_ptr<ArrayBuffer> HybridNativeUtils::toPublicKey(const std::string& privateKey, bool isCompressed) {
-  std::string hex = privateKey;
+  const std::string& hex = privateKey;
   
   // Must be exactly 64 characters (32 bytes)
   if (hex.length() != 64) {
