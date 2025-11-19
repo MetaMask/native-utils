@@ -111,6 +111,9 @@ std::shared_ptr<ArrayBuffer> HybridNativeUtils::getPublicKeyEd25519(const std::s
 }
 
 std::shared_ptr<ArrayBuffer> HybridNativeUtils::getPublicKeyEd25519FromBytes(const std::shared_ptr<ArrayBuffer>& privateKey) {
+  if (privateKey->size() != 32) {
+    throw std::runtime_error("Private key must be 32 bytes");
+  }
   const uint8_t* seed = static_cast<const uint8_t*>(privateKey->data());
   
   return generateEd25519PublicKeyFromBytes(seed);
