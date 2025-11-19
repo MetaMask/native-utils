@@ -76,7 +76,6 @@ std::shared_ptr<ArrayBuffer> HybridNativeUtils::toPublicKey(const std::string& p
       throw std::runtime_error("Private key must be 64 hex characters (32 bytes)");
   }
   
-  // Convert hex to bytes with validation
   uint8_t seckey[32];
   hexToBytes(hex, seckey, 32);
   
@@ -127,7 +126,6 @@ static std::shared_ptr<ArrayBuffer> keccak256Hash(const uint8_t* dataBytes, size
 
   hasher->update(dataBytes, dataLen);
 
-  // Convert hex string to bytes
   auto result = ArrayBuffer::allocate(32);
   hasher->final(static_cast<uint8_t*>(result->data()));
 
@@ -200,7 +198,6 @@ std::shared_ptr<ArrayBuffer> HybridNativeUtils::pubToAddress(const std::shared_p
 }
 
 std::shared_ptr<ArrayBuffer> HybridNativeUtils::hmacSha512(const std::shared_ptr<ArrayBuffer>& key, const std::shared_ptr<ArrayBuffer>& data) {
-  // Get key and data pointers
   const uint8_t* keyBytes = static_cast<const uint8_t*>(key->data());
   const uint8_t* dataBytes = static_cast<const uint8_t*>(data->data());
 
