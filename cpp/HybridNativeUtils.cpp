@@ -69,17 +69,15 @@ static std::shared_ptr<ArrayBuffer> generatePublicKeyFromBytes(const uint8_t* pr
 }
 
 std::shared_ptr<ArrayBuffer> HybridNativeUtils::toPublicKey(const std::string& privateKey, bool isCompressed) {
-  const std::string& hex = privateKey;
-  
   // Must be exactly 64 characters (32 bytes)
-  if (hex.length() != 64) {
+  if (privateKey.length() != 64) {
       throw std::runtime_error("Private key must be 64 hex characters (32 bytes)");
   }
   
-  uint8_t seckey[32];
-  hexToBytes(hex, seckey, 32);
+  uint8_t privateKeyBytes[32];
+  hexToBytes(privateKey, privateKeyBytes, 32);
   
-  return generatePublicKeyFromBytes(seckey, isCompressed);
+  return generatePublicKeyFromBytes(privateKeyBytes, isCompressed);
 }
 
 std::shared_ptr<ArrayBuffer> HybridNativeUtils::toPublicKeyFromBytes(const std::shared_ptr<ArrayBuffer>& privateKey, bool isCompressed) {
@@ -89,9 +87,9 @@ std::shared_ptr<ArrayBuffer> HybridNativeUtils::toPublicKeyFromBytes(const std::
   }
   
   // Get the private key bytes directly
-  const uint8_t* seckey = static_cast<const uint8_t*>(privateKey->data());
+  const uint8_t* privateKeyBytes = static_cast<const uint8_t*>(privateKey->data());
   
-  return generatePublicKeyFromBytes(seckey, isCompressed);
+  return generatePublicKeyFromBytes(privateKeyBytes, isCompressed);
 }
 
 // Common function to generate ed25519 public key from private key bytes (seed)
