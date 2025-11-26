@@ -12,9 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Feat/get public key ed25519 tests ([#29](https://github.com/MetaMask/native-utils/pull/29))
+
+### Changed
+
 - chore: add tests for keccak256 utf8 input ([#33](https://github.com/MetaMask/native-utils/pull/33))
-- Fix: treat keccak256 string input as utf8 not hex ([#32](https://github.com/MetaMask/native-utils/pull/32))
 - chore: fix audit findings ([#28](https://github.com/MetaMask/native-utils/pull/28))
+
+### Fixed
+- Fix: treat keccak256 string input as utf8 not hex ([#32](https://github.com/MetaMask/native-utils/pull/32))
 
 ## [0.7.0]
 
