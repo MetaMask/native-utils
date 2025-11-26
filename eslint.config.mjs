@@ -26,6 +26,16 @@ export default defineConfig([
     },
   },
   {
-    ignores: ['node_modules/', 'lib/', '.yarn/', 'eslint.config.mjs', 'cpp/'],
+    ignores: [
+      'node_modules/',
+      'lib/',
+      '.yarn/',
+      'eslint.config.mjs',
+      'cpp/',
+      '*-example/',
+      '*-master/',
+      '*-main/',
+      'example/src/vectors',
+    ],
   },
 ]);

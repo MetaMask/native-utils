@@ -91,4 +91,7 @@ cpp/botan_generated/
 # Eslint
 .eslintcache
 
-noble-curves-example/
+# Example projects (noble, js-sha3 etc.)
+/*-example/
+/*-master/
+/*-main/

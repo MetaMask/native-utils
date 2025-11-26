@@ -14,3 +14,11 @@ nitrogen/
 
 # Dependencies
 node_modules/ 
+
+# Example projects (noble, js-sha3 etc.)
+/*-example/
+/*-master/
+/*-main/
+
+# Example vectors
+example/src/vectors/
