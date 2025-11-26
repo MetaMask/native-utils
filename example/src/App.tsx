@@ -48,11 +48,33 @@ import {
   runAllKeccak256Benchmarks,
   type BenchmarkResult as Keccak256BenchmarkResult,
 } from './benchmarks/keccak256Benchmark';
+import {
+  runAllEd25519Benchmarks,
+  type BenchmarkResult as Ed25519BenchmarkResult,
+} from './benchmarks/ed25519Benchmark';
+import {
+  testEd25519BasicFunctionality,
+  testEd25519PublicKeyFormat,
+  testEd25519KnownVectors,
+  testEd25519InputVariants,
+  testEd25519Uint8ArrayEdgeCases,
+  testEd25519NobleComparison,
+  testEd25519ErrorHandling,
+} from './tests/ed25519Tests';
+import { runAllEd25519NobleExtractedTests } from './tests/ed25519NobleExtractedTests';
+import {
+  verifyMultipleEd25519Vectors,
+  type Ed25519VerificationResult,
+} from './tests/ed25519NobleCompatibilityTests';
 
 // Define test suite configuration
 interface TestSuite {
   name: string;
-  runner: () => TestResult[] | ValidationResult[] | VerificationResult[];
+  runner: () =>
+    | TestResult[]
+    | ValidationResult[]
+    | VerificationResult[]
+    | Ed25519VerificationResult[];
   key: string;
 }
 
@@ -66,6 +88,9 @@ export default function App() {
     verification: VerificationResult[];
     pubToAddress: TestResult[];
     keccak256: TestResult[];
+    ed25519: TestResult[];
+    ed25519Noble: TestResult[];
+    ed25519Verification: Ed25519VerificationResult[];
   }>({
     basic: [],
     noble: [],
@@ -75,6 +100,9 @@ export default function App() {
     verification: [],
     pubToAddress: [],
     keccak256: [],
+    ed25519: [],
+    ed25519Noble: [],
+    ed25519Verification: [],
   });
 
   const [benchmarkResults, setBenchmarkResults] = useState<{
@@ -82,11 +110,13 @@ export default function App() {
     hmacSuite: HmacBenchmarkResult[] | null;
     pubToAddressSuite: PubToAddressBenchmarkResult[] | null;
     keccak256Suite: Keccak256BenchmarkResult[] | null;
+    ed25519Suite: Ed25519BenchmarkResult[] | null;
   }>({
     suite: null,
     hmacSuite: null,
     pubToAddressSuite: null,
     keccak256Suite: null,
+    ed25519Suite: null,
   });
 
   const [isRunning, setIsRunning] = useState(false);
@@ -148,6 +178,29 @@ export default function App() {
       key: 'keccak256',
       runner: () => runAllKeccak256Tests(),
     },
+    {
+      name: 'getPublicKeyEd25519',
+      key: 'ed25519',
+      runner: () => [
+        ...testEd25519BasicFunctionality(),
+        ...testEd25519PublicKeyFormat(),
+        ...testEd25519KnownVectors(),
+        ...testEd25519InputVariants(),
+        ...testEd25519Uint8ArrayEdgeCases(),
+        ...testEd25519NobleComparison(),
+        ...testEd25519ErrorHandling(),
+      ],
+    },
+    {
+      name: 'getPublicKeyEd25519 - converted test cases from noble/curves',
+      key: 'ed25519Noble',
+      runner: () => runAllEd25519NobleExtractedTests(),
+    },
+    {
+      name: 'getPublicKeyEd25519 - custom noble/curves compatibility tests',
+      key: 'ed25519Verification',
+      runner: () => verifyMultipleEd25519Vectors(),
+    },
   ];
 
   const clearAllResults = () => {
@@ -161,12 +214,16 @@ export default function App() {
       verification: [],
       pubToAddress: [],
       keccak256: [],
+      ed25519: [],
+      ed25519Noble: [],
+      ed25519Verification: [],
     });
     setBenchmarkResults({
       suite: null,
       hmacSuite: null,
       pubToAddressSuite: null,
       keccak256Suite: null,
+      ed25519Suite: null,
     });
   };
 
@@ -215,6 +272,15 @@ export default function App() {
                 privateKey: '',
                 nativeCompressed: '',
                 nobleCompressed: '',
+              },
+            ];
+          } else if (suite.key === 'ed25519Verification') {
+            (newResults as any)[suite.key] = [
+              {
+                matches: false,
+                privateKey: '',
+                nativePublicKey: '',
+                noblePublicKey: '',
               },
             ];
           } else {
@@ -271,6 +337,9 @@ export default function App() {
       ...testResults.verification.map((r) => ({ success: r.matches })),
       ...testResults.pubToAddress.map((r) => ({ success: r.success })),
       ...testResults.keccak256.map((r) => ({ success: r.success })),
+      ...testResults.ed25519.map((r) => ({ success: r.success })),
+      ...testResults.ed25519Noble.map((r) => ({ success: r.success })),
+      ...testResults.ed25519Verification.map((r) => ({ success: r.matches })),
     ];
 
     const totalTests = allResults.length;
@@ -294,6 +363,10 @@ export default function App() {
       passed = results.filter((r: ValidationResult) => r.success).length;
     } else if (key === 'verification') {
       passed = results.filter((r: VerificationResult) => r.matches).length;
+    } else if (key === 'ed25519Verification') {
+      passed = results.filter(
+        (r: Ed25519VerificationResult) => r.matches,
+      ).length;
     } else if (key === 'pubToAddress') {
       passed = results.filter((r: TestResult) => r.success).length;
     } else if (key === 'keccak256') {
@@ -377,6 +450,17 @@ export default function App() {
                 }
                 onPress={() =>
                   runBenchmark('keccak256Suite', runAllKeccak256Benchmarks)
+                }
+                disabled={isRunning}
+              />
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button
+                title={
+                  isRunning ? '⏳ Running...' : '🔑 Ed25519 Full Benchmark'
+                }
+                onPress={() =>
+                  runBenchmark('ed25519Suite', runAllEd25519Benchmarks)
                 }
                 disabled={isRunning}
               />
@@ -495,6 +579,38 @@ export default function App() {
                           </Text>
                           <Text style={styles.testMessage}>
                             Full Noble: {result.nobleCompressed}
+                          </Text>
+                        </>
+                      )}
+                    </>
+                  ) : suite.key === 'ed25519Verification' ? (
+                    <>
+                      <Text
+                        style={[
+                          styles.testName,
+                          result.matches ? styles.success : styles.failure,
+                        ]}
+                      >
+                        {result.matches ? '✓' : '✗'} Private Key:{' '}
+                        {result.privateKey.slice(-8)}
+                      </Text>
+                      <Text style={styles.testMessage}>
+                        Native Ed25519: {result.nativePublicKey.slice(0, 20)}...
+                      </Text>
+                      <Text style={styles.testMessage}>
+                        Noble Ed25519: {result.noblePublicKey.slice(0, 20)}
+                        ...
+                      </Text>
+                      {!result.matches && (
+                        <>
+                          <Text style={[styles.testMessage, styles.failure]}>
+                            ❌ MISMATCH DETECTED
+                          </Text>
+                          <Text style={styles.testMessage}>
+                            Full Native: {result.nativePublicKey}
+                          </Text>
+                          <Text style={styles.testMessage}>
+                            Full Noble: {result.noblePublicKey}
                           </Text>
                         </>
                       )}
@@ -850,6 +966,91 @@ export default function App() {
                 );
               },
             )}
+          </View>
+        )}
+
+        {benchmarkResults.ed25519Suite && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>
+              🔑 Ed25519 Public Key Generation Benchmark Suite
+            </Text>
+            <View style={styles.benchmarkSummary}>
+              <Text style={styles.benchmarkSummaryTitle}>
+                📊 Performance Overview
+              </Text>
+              <Text style={styles.benchmarkSummaryText}>
+                {benchmarkResults.ed25519Suite.length} key generation scenarios
+                tested
+              </Text>
+              <Text style={styles.benchmarkSummaryText}>
+                Average Speedup:{' '}
+                {(
+                  benchmarkResults.ed25519Suite.reduce(
+                    (sum: number, r: any) => sum + r.comparison.speedupFactor,
+                    0,
+                  ) / benchmarkResults.ed25519Suite.length
+                ).toFixed(2)}
+                x
+              </Text>
+              <Text style={styles.benchmarkSummaryText}>
+                All Faster:{' '}
+                {benchmarkResults.ed25519Suite.every(
+                  (r: any) => r.comparison.nativeIsFaster,
+                )
+                  ? '✅ Yes'
+                  : '❌ No'}
+              </Text>
+            </View>
+            <Text style={styles.sectionSubtitle}>Individual Test Results:</Text>
+            {benchmarkResults.ed25519Suite.map((result: any, index: number) => {
+              const getTestIcon = (testName: string) => {
+                if (testName.includes('Random')) return '🎲';
+                if (testName.includes('RFC')) return '📖';
+                return '🔑';
+              };
+
+              return (
+                <View key={index} style={styles.benchmarkResult}>
+                  <Text style={styles.benchmarkTitle}>
+                    {getTestIcon(result.testName)} {result.testName}
+                  </Text>
+                  <View style={styles.benchmarkMetrics}>
+                    <Text style={styles.benchmarkDetails}>
+                      🚀 Native: {result.native.averageTime.toFixed(3)}ms avg •{' '}
+                      {result.native.iops.toFixed(0)} ops/sec
+                    </Text>
+                    <Text style={styles.benchmarkDetails}>
+                      📜 Noble: {result.javascript.averageTime.toFixed(3)}ms avg
+                      • {result.javascript.iops.toFixed(0)} ops/sec
+                    </Text>
+                    <Text
+                      style={[
+                        styles.benchmarkComparison,
+                        result.comparison.nativeIsFaster
+                          ? styles.success
+                          : styles.failure,
+                      ]}
+                    >
+                      ⚡ {result.comparison.speedupFactor.toFixed(2)}x{' '}
+                      {result.comparison.nativeIsFaster ? 'faster' : 'slower'} •{' '}
+                      {result.comparison.performanceGain.toFixed(1)}%
+                      improvement
+                    </Text>
+                    <Text style={styles.benchmarkRange}>
+                      📈 Range: {result.native.minTime.toFixed(3)}ms -{' '}
+                      {result.native.maxTime.toFixed(3)}ms (Native) |{' '}
+                      {result.javascript.minTime.toFixed(3)}ms -{' '}
+                      {result.javascript.maxTime.toFixed(3)}ms (Noble)
+                    </Text>
+                    <Text style={styles.benchmarkStats}>
+                      📊 Std Dev: ±{result.native.standardDeviation.toFixed(3)}
+                      ms (Native) • ±
+                      {result.javascript.standardDeviation.toFixed(3)}ms (Noble)
+                    </Text>
+                  </View>
+                </View>
+              );
+            })}
           </View>
         )}
       </View>
