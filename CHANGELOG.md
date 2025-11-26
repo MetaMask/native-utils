@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - chore: fix audit findings ([#28](https://github.com/MetaMask/native-utils/pull/28))
 
 ### Fixed
+
 - Fix: treat keccak256 string input as utf8 not hex ([#32](https://github.com/MetaMask/native-utils/pull/32))
 
 ## [0.7.0]
