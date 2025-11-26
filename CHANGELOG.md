@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.8.0]
 
-### Uncategorized
+### Added
 
 - Feat/get public key ed25519 tests ([#29](https://github.com/MetaMask/native-utils/pull/29))
 - chore: add tests for keccak256 utf8 input ([#33](https://github.com/MetaMask/native-utils/pull/33))
