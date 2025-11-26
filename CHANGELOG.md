@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0]
+
+### Uncategorized
+
+- Feat/get public key ed25519 tests ([#29](https://github.com/MetaMask/native-utils/pull/29))
+- chore: add tests for keccak256 utf8 input ([#33](https://github.com/MetaMask/native-utils/pull/33))
+- Fix: treat keccak256 string input as utf8 not hex ([#32](https://github.com/MetaMask/native-utils/pull/32))
+- chore: fix audit findings ([#28](https://github.com/MetaMask/native-utils/pull/28))
+
 ## [0.7.0]
 
 ### Added
@@ -50,7 +59,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - feat: add native public key generation ([#5](https://github.com/MetaMask/native-utils/pull/5))
 - feat: add Example app with tests cases ([#6](https://github.com/MetaMask/native-utils/pull/6))
 
-[Unreleased]: https://github.com/MetaMask/native-utils/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/MetaMask/native-utils/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/MetaMask/native-utils/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/MetaMask/native-utils/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/MetaMask/native-utils/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/MetaMask/native-utils/compare/v0.4.0...v0.5.0
