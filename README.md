@@ -1,47 +1,95 @@
-# MetaMask Module Template
+# @metamask/native-utils
 
-This TypeScript module is maintained in the style of the MetaMask team.
-
-## Template Instructions
-
-Follow these instructions when using this template.
-
-- Update the package name, referenced in the following places:
-  - The `name` field of `package.json`
-  - The README title
-  - The README "Usage" section
-- Update the package description
-  - The package description is referenced at the beginning of the README, and in the `description` field of `package.json`.
-- Update the repository URL, referenced in the following places:
-  - `repository` field of `package.json`
-  - The links in the API section of the README
-- If your project has side effects, update the `sideEffects` field of
-  `package.json` to `true`, or an array of file globs that match the files that
-  have side effects.
-- Update the pull request template (`.github/pull_request_template.md`) to remove the `Examples` section that is specific to this template.
-- Update the README "Usage" section, or remove it if it's not needed.
-- Update the CODEOWNERS file to set the appropriate code owners for the repository (typically one or more engineering teams)
-  - Ensure each referenced team has write permission, and that the engineering team still has write permission.
-- Delete these instructions.
+This library provides mostly cryptographic functions implemented in C++ for React Native. These functions are intended to polyfill of libraries like [@noble/hashes](https://www.npmjs.com/package/@noble/hashes), [@noble/curves](https://www.npmjs.com/package/@noble/curves), [@ethereumjs/util](https://github.com/ethereumjs/ethereumjs-monorepo), [js-sha3](https://www.npmjs.com/package/js-sha3), etc.
 
 ## Installation
 
-`yarn add @metamask/metamask-module-template`
+`yarn add @metamask/native-utils react-native-nitro-modules`
 
-or
+## Performance
 
-`npm install @metamask/metamask-module-template`
+Because this library is running C++ code, it is significantly faster than the JavaScript implementations of the same functions. Here are some benchmarks (running on a mobile device):
+
+| Operation                    | Native                | JavaScript            | Speedup  |
+| :--------------------------- | :-------------------- | :-------------------- | :------- |
+| **secp256k1 Key Generation** | 1.135 ms (881 ops/s)  | 269.55 ms (4 ops/s)   | **237x** |
+| **Ed25519 Key Generation**   | 0.014 ms (73k ops/s)  | 1.79 ms (560 ops/s)   | **130x** |
+| **Public Key to Address**    | 0.002 ms (599k ops/s) | 0.316 ms (3.1k ops/s) | **189x** |
+| **Keccak256** (32 bytes)     | 0.002 ms (402k ops/s) | 0.297 ms (3.3k ops/s) | **120x** |
+| **HMAC-SHA512**              | 0.007 ms (145k ops/s) | 0.621 ms (1.6k ops/s) | **90x**  |
 
 ## Usage
 
-_Add examples here_
+```typescript
+import {
+  getPublicKey,
+  getPublicKeyEd25519,
+  keccak256,
+  pubToAddress,
+  hmacSha512,
+} from '@metamask/native-utils';
+
+// Generate secp256k1 public key (compressed by default)
+const privateKey =
+  '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+const publicKey = getPublicKey(privateKey);
+
+// Generate Ed25519 public key
+const ed25519PrivKey = 'a'.repeat(64); // 32 bytes as hex
+const ed25519PubKey = getPublicKeyEd25519(ed25519PrivKey);
+
+// Compute Keccak-256 hash
+const hash = keccak256('hello');
+
+// Get Ethereum address from public key
+const uncompressedPubKey = getPublicKey(privateKey, false);
+const ethAddress = pubToAddress(uncompressedPubKey);
+
+// Compute HMAC-SHA512
+const key = new Uint8Array([1, 2, 3]);
+const data = new Uint8Array([4, 5, 6]);
+const mac = hmacSha512(key, data);
+```
 
 ## API
 
-See our documentation:
+### `getPublicKey(privateKey, isCompressed?)`
 
-- [Latest published API documentation](https://metamask.github.io/metamask-module-template/latest/)
-- [Latest development API documentation](https://metamask.github.io/metamask-module-template/staging/)
+Generate secp256k1 public key. Matches `@noble/secp256k1` API.
+
+- `privateKey: string | Uint8Array | bigint` — hex string, bytes, or bigint
+- `isCompressed?: boolean` — compressed (33 bytes) or uncompressed (65 bytes). Default: `true`
+- **Returns:** `Uint8Array`
+
+### `getPublicKeyEd25519(privateKey)`
+
+Generate Ed25519 public key. Matches `@noble/curves` ed25519 API.
+
+- `privateKey: string | Uint8Array` — 32-byte key as hex (64 chars) or bytes
+- **Returns:** `Uint8Array` (32 bytes)
+
+### `keccak256(data)`
+
+Compute Keccak-256 hash. Matches `@noble/hashes` keccak_256 API.
+
+- `data: string | number[] | ArrayBuffer | Uint8Array` — strings are UTF-8 encoded
+- **Returns:** `Uint8Array` (32 bytes)
+
+### `pubToAddress(pubKey, sanitize?)`
+
+Get Ethereum address from public key. Matches `@ethereumjs/util` pubToAddress API.
+
+- `pubKey: Uint8Array` — uncompressed public key (or any format if sanitize enabled)
+- `sanitize?: boolean` — accept other key formats. Default: `false`
+- **Returns:** `Uint8Array` (20 bytes)
+
+### `hmacSha512(key, data)`
+
+Compute HMAC-SHA512.
+
+- `key: Uint8Array` — HMAC key
+- `data: Uint8Array` — data to authenticate
+- **Returns:** `Uint8Array` (64 bytes)
 
 ## Contributing
 
@@ -50,13 +98,24 @@ See our documentation:
 - Install the current LTS version of [Node.js](https://nodejs.org)
   - If you are using [nvm](https://github.com/creationix/nvm#installation) (recommended) running `nvm install` will install the latest version and running `nvm use` will automatically choose the right node version for you.
 - Install [Yarn](https://yarnpkg.com) v4 via [Corepack](https://github.com/nodejs/corepack?tab=readme-ov-file#how-to-install)
-- Run `yarn install` to install dependencies and run any required post-install scripts
+- Run `yarn install` to install dependencies.
+- Run `yarn build` to build the library and mostly to generate the Nitrogen specs (it's enought to just run `yarn nitrogen`)
+
+### Running the example app
+
+1. Add `"workspaces": ["example"]` to your root `package.json` and run `yarn install` in the root directory. This is necessary because if "workspaces" are field is defined, it's not possible to publish the package. Then run `yarn install`.
+2. Run `yarn android` to build the Android app.
+3. Run `yarn android:release` to build the Android app in release mode. (strongly recommended for benchmarking).
 
 ### Testing and Linting
 
-Run `yarn test` to run the tests once. To run tests on file changes, run `yarn test:watch`.
+Because this library is running native code is not possible to run tests using Jest. You need to run the example app and run the tests manually.
 
-Run `yarn lint` to run the linter, or run `yarn lint:fix` to run the linter and fix any automatically fixable issues.
+### Nitro
+
+This library is using Nitro modules bridge JS to C++ code. Most important thing to know is that when you change/add/remove any exposed function in `NativeUtils.nitro.ts` file, you need to run `yarn nitrogen` to regenerate the Nitrogen specs (in `nitrogen/generated` directory).
+
+Please follow the [Nitro Modules documentation](https://nitro.margelo.com/docs/what-is-nitro) to learn more.
 
 ### Release & Publishing
 
